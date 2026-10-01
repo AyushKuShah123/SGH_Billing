@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
 
+  // Only POST requests are allowed
   if (req.method !== 'POST') {
     return res.status(405).json({
       success: false,
@@ -7,8 +8,12 @@ export default async function handler(req, res) {
     });
   }
 
+
+  // Google Apps Script Web App URL
   const url = process.env.GOOGLE_APPS_SCRIPT_URL;
 
+
+  // Check environment variable
   if (!url) {
     return res.status(503).json({
       success: false,
@@ -16,55 +21,200 @@ export default async function handler(req, res) {
     });
   }
 
+
   try {
 
+    const incoming = req.body || {};
+
+
     /*
-     * The frontend normally sends:
+     * =========================================================
+     * BILL HISTORY SEARCH
+     * =========================================================
+     *
+     * Frontend sends:
+     *
+     * {
+     *   action: "searchBills",
+     *   search: {
+     *      date: "...",
+     *      fromDate: "...",
+     *      toDate: "...",
+     *      customer: "...",
+     *      billNo: "...",
+     *      paymentMode: "..."
+     *   }
+     * }
+     *
+     * Forward it directly to Google Apps Script.
+     */
+
+    if (incoming.action === 'searchBills') {
+
+      const payload = {
+        action: 'searchBills',
+        search: incoming.search || {}
+      };
+
+
+      const response = await fetch(url, {
+
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify(payload)
+
+      });
+
+
+      const text = await response.text();
+
+
+      let result;
+
+      try {
+
+        result = JSON.parse(text);
+
+      } catch (e) {
+
+        return res.status(502).json({
+
+          success: false,
+
+          error:
+            'Invalid response from Google Apps Script',
+
+          response:
+            text
+
+        });
+
+      }
+
+
+      return res
+        .status(response.ok ? 200 : 502)
+        .json(result);
+
+    }
+
+
+
+    /*
+     * =========================================================
+     * SAVE BILL
+     * =========================================================
+     *
+     * The frontend may send either:
+     *
+     * 1. Direct bill:
      *
      * {
      *   id: "...",
      *   items: [...]
      * }
      *
-     * But this also supports:
+     * OR
+     *
+     * 2. Wrapped bill:
      *
      * {
      *   bill: {
+     *      id: "...",
      *      items: [...]
      *   }
      * }
-     *
-     * This prevents the "Bill contains no items"
-     * problem caused by different payload formats.
      */
 
-    const incoming = req.body || {};
 
-    let bill = incoming;
+    let bill;
+
 
     if (
       incoming.bill &&
       typeof incoming.bill === 'object' &&
-      !Array.isArray(incoming.items)
+      !Array.isArray(incoming.bill)
     ) {
+
       bill = incoming.bill;
+
+    } else {
+
+      bill = incoming;
+
     }
 
 
     /*
-     * Make absolutely sure items is an array.
+     * Make sure bill is an object.
      */
+
+    if (
+      !bill ||
+      typeof bill !== 'object' ||
+      Array.isArray(bill)
+    ) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        error:
+          'Invalid bill data'
+
+      });
+
+    }
+
+
+    /*
+     * Make sure items exists.
+     */
+
     if (!Array.isArray(bill.items)) {
+
       bill.items = [];
+
     }
 
 
     /*
-     * Send the exact format expected by Apps Script.
+     * Do not allow an empty bill to be sent.
+     *
+     * This gives a clear error instead of sending
+     * an invalid bill to Google Apps Script.
      */
+
+    if (bill.items.length === 0) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        error:
+          'Bill contains no items'
+
+      });
+
+    }
+
+
+    /*
+     * =========================================================
+     * SEND BILL TO GOOGLE APPS SCRIPT
+     * =========================================================
+     */
+
     const payload = {
+
       action: 'saveBill',
+
       bill: bill
+
     };
 
 
@@ -73,37 +223,59 @@ export default async function handler(req, res) {
       method: 'POST',
 
       headers: {
-        'Content-Type': 'application/json'
+
+        'Content-Type':
+          'application/json'
+
       },
 
-      body: JSON.stringify(payload)
+      body:
+        JSON.stringify(payload)
 
     });
 
 
-    const text = await response.text();
-
-
     /*
-     * Return Apps Script's actual response
-     * back to the website.
+     * Read Google Apps Script response.
      */
+
+    const text =
+      await response.text();
+
+
     let result;
 
+
     try {
-      result = JSON.parse(text);
+
+      result =
+        JSON.parse(text);
+
     } catch (e) {
 
       return res.status(502).json({
+
         success: false,
-        error: 'Invalid response from Google Apps Script',
-        response: text
+
+        error:
+          'Invalid response from Google Apps Script',
+
+        response:
+          text
+
       });
 
     }
 
 
-    return res.status(response.ok ? 200 : 502).json(result);
+    /*
+     * Return the actual Apps Script result
+     * back to index.html.
+     */
+
+    return res
+      .status(response.ok ? 200 : 502)
+      .json(result);
 
 
   } catch (error) {
