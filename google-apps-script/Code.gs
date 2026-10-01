@@ -41,24 +41,71 @@ function doPost(e) {
       JSON.parse(e.postData.contents);
 
 
-    if (data.action === 'saveBill') {
+    /*
+     * Expected:
+     *
+     * {
+     *   action: "saveBill",
+     *   bill: {...}
+     * }
+     */
 
-      return saveBill(data.bill);
+
+    if (data.action !== 'saveBill') {
+
+      return jsonResponse({
+        success: false,
+        error: 'Unknown action'
+      });
 
     }
 
 
-    return jsonResponse({
-      success: false,
-      error: 'Unknown action'
-    });
+    const bill = data.bill;
+
+
+    if (!bill) {
+
+      return jsonResponse({
+        success: false,
+        error: 'Bill data is missing'
+      });
+
+    }
+
+
+    if (!Array.isArray(bill.items)) {
+
+      return jsonResponse({
+        success: false,
+        error: 'Bill items are missing or invalid'
+      });
+
+    }
+
+
+    if (bill.items.length === 0) {
+
+      return jsonResponse({
+        success: false,
+        error: 'Bill contains no items'
+      });
+
+    }
+
+
+    return saveBill(bill);
 
 
   } catch (error) {
 
     return jsonResponse({
+
       success: false,
-      error: error.toString()
+
+      error:
+        error.toString()
+
     });
 
   }
