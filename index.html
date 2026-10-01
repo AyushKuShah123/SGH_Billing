@@ -12,13 +12,13 @@
 </style></head>
 <body><div id="app"></div>
 <script>
-const state={view:'dashboard',user:'Admin',currency:'NPR',theme:'dark',settings:{name:'Shivam Gift House',gstLabel:'PAN Number',gst:'08XXXXXXX00',mobile:'',address:'Bardaghat-4, NawalParasi',taxLabel:'Tax Rate',taxRate:0,gstRates:false,accent:'#8b7cff'},bills:[],items:[{p:'',q:1,u:0}],customer:{name:'',phone:'',address:''},payment:'',discountType:'amount',discount:0,googleToday:[],historyResults:[],historyLoading:false};
+const state={view:'dashboard',user:'Admin',currency:'INR',theme:'dark',settings:{name:'Shivam Gift House',gstLabel:'GST Number',gst:'08XXXXXXXXXXXXXX',mobile:'',address:'Jaipur, Rajasthan',taxLabel:'Tax Rate',taxRate:0,gstRates:false,accent:'#8b7cff'},bills:[],items:[{p:'',q:1,u:0}],customer:{name:'',phone:'',address:''},payment:'',discountType:'amount',discount:0,googleToday:[],historyResults:[],historyLoading:false};
 const STORAGE='sgh_billing_v1';
 try{const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');if(saved){Object.assign(state,saved);state.settings=Object.assign(state.settings,saved.settings||{});}}catch(e){}
 function persist(){localStorage.setItem(STORAGE,JSON.stringify({currency:state.currency,theme:state.theme,settings:state.settings,bills:state.bills}));}
 function todayParts(){const d=new Date();return {iso:d.toISOString().slice(0,10),label:d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),time:d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})};}
 
-const seed=[];
+const seed=[['SGH-2601J0001','01 Oct 2026','Rahul','Gift Box',2,150,'Cash','Admin'],['SGH-2601J0002','01 Oct 2026','Amit','Teddy Bear',1,500,'UPI','Billing User'],['SGH-2601J0003','01 Oct 2026','Neha','Greeting Card',2,50,'Balance','Billing User']];
 if(!state.bills.length) state.bills=seed.map(x=>({id:x[0],date:x[1],customer:x[2],items:[{p:x[3],q:x[4],u:x[5]}],payment:x[6],user:x[7]}));
 function money(n){return new Intl.NumberFormat(state.currency==='NPR'?'en-NP':'en-IN',{style:'currency',currency:state.currency,maximumFractionDigits:2}).format(n||0)}
 function total(b){return b.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0)}
@@ -626,7 +626,7 @@ function bills(){
   return `<div class="pagehead">
     <div>
       <h2>Bill History</h2>
-      <div class="muted">Search bills directly from Server</div>
+      <div class="muted">Search bills directly from Google Sheets</div>
     </div>
   </div>
 
@@ -664,7 +664,7 @@ function bills(){
     </div>
 
     <div class="actions" style="margin-top:14px">
-      <button class="primary" id="historySearchBtn" onclick="searchBillHistory()">🔎 Search</button>
+      <button class="primary" id="historySearchBtn" onclick="searchBillHistory()">🔎 Search Google Sheet</button>
       <button class="ghost" onclick="clearHistorySearch()">Clear</button>
     </div>
 
@@ -717,7 +717,7 @@ async function searchBillHistory(){
 
   btn.disabled=true;
   btn.textContent='Searching...';
-  status.textContent='Searching Data...';
+  status.textContent='Searching Google Sheets...';
 
   try{
     const r=await fetch('/api/save-bill',{
@@ -745,12 +745,12 @@ async function searchBillHistory(){
       status.textContent='No data found.';
     }else{
       table.innerHTML=billTable(rows);
-      status.textContent=`${rows.length} bill(s) found in Server.`;
+      status.textContent=`${rows.length} bill(s) found in Google Sheets.`;
     }
 
   }catch(e){
     console.error(e);
-    table.innerHTML='<div class="empty">Unable to fetch bill data from server.</div>';
+    table.innerHTML='<div class="empty">Unable to fetch bill data from Google Sheets.</div>';
     status.textContent=e.message||'Search failed.';
   }finally{
     btn.disabled=false;
@@ -884,7 +884,7 @@ async function saveBill(){
   const result=await syncBillToGoogle(b);
 
   if(!result.success){
-    toast('Save failed: '+(result.error||'Save error'));
+    toast('Save failed: '+(result.error||'Google Sheets error'));
     return;
   }
 
@@ -921,7 +921,7 @@ async function syncBillToGoogle(b){
     if(!r.ok || result.success===false){
       return {
         success:false,
-        error:result.error||'GData Save failed'
+        error:result.error||'Google Sheets save failed'
       };
     }
 
