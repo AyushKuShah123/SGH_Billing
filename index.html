@@ -5,43 +5,936 @@
 <title>Shivam Gift House — Billing</title>
 <style>
 :root{color-scheme:dark;--bg:#10141b;--surface:#171c24;--surface2:#202733;--text:#f4f7fb;--muted:#a8b0bf;--border:#303846;--accent:#8b7cff;--accent2:#2b2550;--danger:#d64545;}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}#app{min-height:100vh;background:var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer;transition:transform .08s ease,box-shadow .08s ease,background .15s ease,border-color .15s ease}button:not(:disabled):active{transform:translateY(1px) scale(.98);box-shadow:inset 0 2px 5px rgba(0,0,0,.28)}button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.nav button:active,.ghost:active,.primary:active,.danger:active{filter:brightness(.9)}button:disabled{opacity:.6;cursor:not-allowed}.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:max(12px,env(safe-area-inset-top)) 18px 12px}.topin{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:11px}.logo{width:40px;height:40px;border-radius:12px;background:var(--accent);color:white;display:grid;place-items:center;font-weight:900}.brand h1{font-size:16px;margin:0}.brand small{color:var(--muted)}.nav{display:flex;gap:6px;flex-wrap:wrap}.nav button,.ghost{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:9px 12px;border-radius:10px}.nav button.active{background:var(--accent2);color:var(--accent);border-color:transparent;font-weight:700}.main{max-width:1180px;margin:auto;padding:22px 18px 40px}.pagehead{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:18px}.pagehead h2{margin:0 0 5px;font-size:26px}.muted{color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;padding:11px 15px;border-radius:10px;font-weight:750}.danger{border:0;background:var(--danger);color:white;padding:9px 12px;border-radius:9px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px;box-shadow:0 6px 22px rgba(20,30,50,.04)}.metric{font-size:25px;font-weight:800;margin-top:7px}.label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}.section{margin-top:18px}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:13px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{padding:11px 12px;border-bottom:1px solid var(--border);text-align:left}.table th{font-size:12px;color:var(--muted);background:var(--surface2)}.table tr:last-child td{border-bottom:0}.badge{display:inline-flex;padding:4px 8px;border-radius:99px;background:var(--accent2);color:var(--accent);font-size:12px;font-weight:700}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 11px;outline:none}.field textarea{min-height:72px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}.billbox{display:grid;grid-template-columns:1.35fr .65fr;gap:16px}.items{margin-top:14px}.items table{min-width:720px}.items input{width:100%;border:0;background:transparent;color:var(--text);outline:none;padding:4px}.items .narrow{width:90px}.remove{border:0;background:transparent;color:var(--danger);font-size:18px}.totals{display:flex;justify-content:flex-end;margin-top:15px}.totalbox{width:min(100%,380px);background:var(--surface2);border:1px solid var(--border);border-radius:13px;padding:15px}.totalrow{display:flex;justify-content:space-between;padding:6px 0}.grand{font-size:21px;font-weight:850;border-top:1px solid var(--border);margin-top:7px;padding-top:12px}.word{color:var(--muted);font-size:13px;margin-top:8px}.empty{padding:30px;text-align:center;color:var(--muted)}.settings{display:grid;grid-template-columns:1fr 1fr;gap:15px}.hide{display:none!important}.toast{position:fixed;right:18px;bottom:18px;background:var(--text);color:var(--bg);padding:12px 15px;border-radius:10px;z-index:99;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}#app{min-height:100vh;background:var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer}.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:max(12px,env(safe-area-inset-top)) 18px 12px}.topin{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:11px}.logo{width:40px;height:40px;border-radius:12px;background:var(--accent);color:white;display:grid;place-items:center;font-weight:900}.brand h1{font-size:16px;margin:0}.brand small{color:var(--muted)}.nav{display:flex;gap:6px;flex-wrap:wrap}.nav button,.ghost{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:9px 12px;border-radius:10px}.nav button.active{background:var(--accent2);color:var(--accent);border-color:transparent;font-weight:700}.nav button:active,.ghost:active,.primary:active,.danger:active,.remove:active{transform:translateY(1px);filter:brightness(.88)}.nav button:focus-visible,.ghost:focus-visible,.primary:focus-visible,.danger:focus-visible,.remove:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 45%,transparent);outline-offset:2px}.main{max-width:1180px;margin:auto;padding:22px 18px 40px}.pagehead{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:18px}.pagehead h2{margin:0 0 5px;font-size:26px}.muted{color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;padding:11px 15px;border-radius:10px;font-weight:750}.danger{border:0;background:var(--danger);color:white;padding:9px 12px;border-radius:9px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px;box-shadow:0 6px 22px rgba(20,30,50,.04)}.metric{font-size:25px;font-weight:800;margin-top:7px}.label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}.section{margin-top:18px}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:13px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{padding:11px 12px;border-bottom:1px solid var(--border);text-align:left}.table th{font-size:12px;color:var(--muted);background:var(--surface2)}.table tr:last-child td{border-bottom:0}.badge{display:inline-flex;padding:4px 8px;border-radius:99px;background:var(--accent2);color:var(--accent);font-size:12px;font-weight:700}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 11px;outline:none}.field textarea{min-height:72px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}.billbox{display:grid;grid-template-columns:1.35fr .65fr;gap:16px}.items{margin-top:14px}.items table{min-width:720px}.items input{width:100%;border:0;background:transparent;color:var(--text);outline:none;padding:4px}.items .narrow{width:90px}.remove{border:0;background:transparent;color:var(--danger);font-size:18px}.totals{display:flex;justify-content:flex-end;margin-top:15px}.totalbox{width:min(100%,380px);background:var(--surface2);border:1px solid var(--border);border-radius:13px;padding:15px}.totalrow{display:flex;justify-content:space-between;padding:6px 0}.grand{font-size:21px;font-weight:850;border-top:1px solid var(--border);margin-top:7px;padding-top:12px}.word{color:var(--muted);font-size:13px;margin-top:8px}.empty{padding:30px;text-align:center;color:var(--muted)}.settings{display:grid;grid-template-columns:1fr 1fr;gap:15px}.hide{display:none!important}.toast{position:fixed;right:18px;bottom:18px;background:var(--text);color:var(--bg);padding:12px 15px;border-radius:10px;z-index:99;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.billbox,.settings{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr 1fr}.pagehead{flex-direction:column}.nav{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}.nav button{white-space:nowrap}.topin{align-items:flex-start;flex-direction:column}.top{position:relative}}
 @media(max-width:560px){.main{padding:16px 12px 30px}.grid{grid-template-columns:1fr 1fr;gap:9px}.card{padding:13px}.metric{font-size:20px}.formgrid{grid-template-columns:1fr}.actions{width:100%}.actions>*{flex:1}.brand h1{font-size:15px}.logo{width:36px;height:36px}.pagehead h2{font-size:23px}}
 @media print{body{background:white;color:#111}.top,.no-print{display:none!important}.main{padding:0;max-width:none}.card{box-shadow:none;border:0}.printbill{display:block!important}.screenbill{display:none!important}}
 </style></head>
 <body><div id="app"></div>
 <script>
-const API_URL='/api/save-bill';
-const USERS={admin:{password:'admin123',role:'ADMIN',name:'Admin'},cashier:{password:'cashier123',role:'USER',name:'Billing User'}};
-const SESSION_KEY='sghBillingSession'; const SESSION_DAYS=01; const state={view:'dashboard',loggedIn:false,role:'',user:'',currency:'NPR',theme:'dark',settings:{name:'Shivam Gift House',gstLabel:'PAN Number',gst:'08XXXXXXXX00',mobile:'',address:'Bardaghat--4, NawalParasi',taxLabel:'Tax Rate',taxRate:0,gstRates:false,accent:'#8b7cff'},bills:[],items:[{p:'',q:1,u:0}],customer:{name:'',phone:'',address:''},payment:'',discountType:'amount',discount:0,history:{mode:'date',date:'',from:'',to:'',query:'',payment:'All',results:null,loading:false}};
-const seed=[];
-state.bills=seed.map(x=>({id:x[0],date:x[1],customer:x[2],items:[{p:x[3],q:x[4],u:x[5]}],payment:x[6],user:x[7]}));
+const state={view:'dashboard',user:'Admin',currency:'INR',theme:'dark',settings:{name:'Shivam Gift House',gstLabel:'GST Number',gst:'08XXXXXXXXXXXXXX',mobile:'',address:'Jaipur, Rajasthan',taxLabel:'Tax Rate',taxRate:0,gstRates:false,accent:'#8b7cff'},bills:[],items:[{p:'',q:1,u:0}],customer:{name:'',phone:'',address:''},payment:'',discountType:'amount',discount:0,googleToday:[],historyResults:[],historyLoading:false};
+const STORAGE='sgh_billing_v1';
+try{const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');if(saved){Object.assign(state,saved);state.settings=Object.assign(state.settings,saved.settings||{});}}catch(e){}
+function persist(){localStorage.setItem(STORAGE,JSON.stringify({currency:state.currency,theme:state.theme,settings:state.settings,bills:state.bills}));}
+function todayParts(){const d=new Date();return {iso:d.toISOString().slice(0,10),label:d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),time:d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})};}
+
+const seed=[['SGH-2601J0001','01 Oct 2026','Rahul','Gift Box',2,150,'Cash','Admin'],['SGH-2601J0002','01 Oct 2026','Amit','Teddy Bear',1,500,'UPI','Billing User'],['SGH-2601J0003','01 Oct 2026','Neha','Greeting Card',2,50,'Balance','Billing User']];
+if(!state.bills.length) state.bills=seed.map(x=>({id:x[0],date:x[1],customer:x[2],items:[{p:x[3],q:x[4],u:x[5]}],payment:x[6],user:x[7]}));
 function money(n){return new Intl.NumberFormat(state.currency==='NPR'?'en-NP':'en-IN',{style:'currency',currency:state.currency,maximumFractionDigits:2}).format(n||0)}
 function total(b){return b.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0)}
 function billGrand(b){let s=total(b),d=b.discountType==='percent'?s*(b.discount||0)/100:(b.discount||0),a=Math.max(0,s-d);return a+a*(b.taxRate||0)/100}
 function words(n){n=Math.round(n);if(!n)return 'Zero Only';let a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];function two(x){return x<20?a[x]:b[Math.floor(x/10)]+(x%10?' '+a[x%10]:'')}function f(x){if(x<100)return two(x);if(x<1000)return a[Math.floor(x/100)]+' Hundred'+(x%100?' '+two(x%100):'');if(x<100000)return f(Math.floor(x/1000))+' Thousand'+(x%1000?' '+f(x%1000):'');if(x<10000000)return f(Math.floor(x/100000))+' Lakh'+(x%100000?' '+f(x%100000):'');return f(Math.floor(x/10000000))+' Crore'+(x%10000000?' '+f(x%10000000):'')}return f(n)+' Only'}
 function billNo(){let d=new Date(),yy=String(d.getFullYear()).slice(-2),day=String(d.getDate()).padStart(2,'0'),m=String.fromCharCode(65+d.getMonth()),prefix=`SGH-${yy}${day}${m}`;let nums=state.bills.filter(b=>b.id.startsWith(prefix)).map(b=>+b.id.slice(-4)||0);return prefix+String((Math.max(0,...nums)+1)).padStart(4,'0')}
-function loginScreen(){let app=document.querySelector('#app');app.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;padding:20px"><section class="card" style="width:min(420px,100%);padding:26px"><div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">SG</div><h1 style="margin:0">${state.settings.name}</h1><div class="muted" style="margin-top:5px">Billing System</div></div><div class="field"><label>Username</label><input id="loginUser" autocomplete="username" placeholder="Username"></div><div class="field" style="margin-top:12px"><label>Password</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"></div><button class="primary" style="width:100%;margin-top:16px" onclick="login()">Login</button><div class="muted" style="font-size:12px;margin-top:14px;text-align:center">Admin and billing-user access are role based.</div></section></main>`}
-function login(){let u=(document.querySelector('#loginUser')?.value||'').trim().toLowerCase(),p=document.querySelector('#loginPass')?.value||'',account=USERS[u];if(!account||account.password!==p){toast('Invalid username or password');return}state.loggedIn=true;state.role=account.role;state.user=account.name;state.view='dashboard';localStorage.setItem(SESSION_KEY,JSON.stringify({username:u,role:account.role,name:account.name,expiresAt:Date.now()+SESSION_DAYS*24*60*60*1000}));render()}
-function logout(){state.loggedIn=false;state.role='';state.user='';state.view='dashboard';localStorage.removeItem(SESSION_KEY);render()}
-function restoreSession(){try{const raw=localStorage.getItem(SESSION_KEY);if(!raw)return;const s=JSON.parse(raw);if(!s.expiresAt||Date.now()>=s.expiresAt){localStorage.removeItem(SESSION_KEY);return}const account=USERS[s.username];if(!account||account.role!==s.role){localStorage.removeItem(SESSION_KEY);return}state.loggedIn=true;state.role=account.role;state.user=account.name}catch(e){localStorage.removeItem(SESSION_KEY)}}
-function render(){let app=document.querySelector('#app');document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.colorScheme=state.theme;if(state.theme==='light'){document.documentElement.style.setProperty('--bg','#f4f7fb');document.documentElement.style.setProperty('--surface','#ffffff');document.documentElement.style.setProperty('--surface2','#f8fafc');document.documentElement.style.setProperty('--text','#172033');document.documentElement.style.setProperty('--muted','#667085');document.documentElement.style.setProperty('--border','#e4e8ef');document.documentElement.style.setProperty('--accent2','#ebe8ff')}else{document.documentElement.style.setProperty('--bg','#10141b');document.documentElement.style.setProperty('--surface','#171c24');document.documentElement.style.setProperty('--surface2','#202733');document.documentElement.style.setProperty('--text','#f4f7fb');document.documentElement.style.setProperty('--muted','#a8b0bf');document.documentElement.style.setProperty('--border','#303846');document.documentElement.style.setProperty('--accent2','#2b2550')}if(!state.loggedIn){loginScreen();return}let nav=['dashboard','new','bills','outstanding'];if(state.role==='ADMIN')nav.push('settings');app.innerHTML=`<header class="top"><div class="topin"><div class="brand"><div class="logo">SG</div><div><h1>${state.settings.name}</h1><small>${state.role==='ADMIN'?'Administrator':'Billing User'} · ${state.user}</small></div></div><nav class="nav">${nav.map(v=>`<button class="${state.view===v?'active':''}" onclick="go('${v}')">${({dashboard:'Dashboard',new:'New Bill',bills:'Bills',outstanding:'Outstanding',settings:'Admin'})[v]}</button>`).join('')}<button onclick="toggleTheme()">${state.theme==='dark'?'☀ Light':'☾ Dark'}</button><button onclick="logout()">Logout</button></nav></div></header><main class="main">${state.view==='dashboard'?dashboard():state.view==='new'?newBill():state.view==='bills'?bills():state.view==='outstanding'?outstanding():settings()}</main><div id="toast"></div>`}
-function dashboard(){let today=state.bills.filter(b=>b.date==='01 Oct 2026'),sales=today.reduce((s,b)=>s+total(b),0),cash=today.filter(b=>b.payment==='Cash').reduce((s,b)=>s+total(b),0),upi=today.filter(b=>b.payment==='UPI').reduce((s,b)=>s+total(b),0),bal=today.filter(b=>b.payment==='Balance').reduce((s,b)=>s+total(b),0);return `<div class="pagehead"><div><h2>Dashboard</h2><div class="muted">Today’s billing overview</div></div><button class="primary" onclick="go('new')">＋ New Bill</button></div><div class="grid"><div class="card"><div class="label">Today's Bills</div><div class="metric">${today.length}</div></div><div class="card"><div class="label">Today's Sales</div><div class="metric">${money(sales)}</div></div><div class="card"><div class="label">Cash + UPI</div><div class="metric">${money(cash+upi)}</div></div><div class="card"><div class="label">Outstanding</div><div class="metric">${money(bal)}</div></div></div><div class="section card"><div class="pagehead"><div><h3 style="margin:0">Today's Outstanding</h3><small class="muted">Unpaid bills created today</small></div><button class="ghost" onclick="go('outstanding')">View all</button></div>${today.filter(b=>b.payment==='Balance').length?`<div class="tablewrap"><table class="table"><tr><th>Bill No.</th><th>Customer</th><th>Amount</th><th>Created By</th></tr>${today.filter(b=>b.payment==='Balance').map(b=>`<tr><td>${b.id}</td><td>${b.customer||'Walk-in'}</td><td>${money(total(b))}</td><td>${b.user}</td></tr>`).join('')}</table></div>`:'<div class="empty">No outstanding bills today.</div>'}</div>`}
-function newBill(){let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;return `<div class="pagehead"><div><h2>New Bill</h2><div class="muted">Bill No. <b>${billNo()}</b> · automatically generated</div></div><div class="actions"><button class="ghost" onclick="resetBill()">Clear</button><button class="primary" onclick="saveBill()">Save & Print</button></div></div><div class="billbox"><section class="card"><div class="formgrid"><div class="field"><label>Customer Name</label><input id="cn" value="${state.customer.name}" placeholder="Optional"></div><div class="field"><label>Phone</label><input id="cp" value="${state.customer.phone}" placeholder="Optional"></div><div class="field" style="grid-column:1/-1"><label>Address</label><input id="ca" value="${state.customer.address}" placeholder="Optional"></div></div><div class="items"><div class="tablewrap"><table class="table"><tr><th>S.No.</th><th>Particular</th><th>Quantity</th><th>Unit Price</th><th>Total</th><th></th></tr>${state.items.map((x,i)=>`<tr><td>${i+1}</td><td><input value="${x.p}" oninput="state.items[${i}].p=this.value"></td><td><input class="narrow" type="number" min="0" value="${x.q}" oninput="state.items[${i}].q=this.value;refreshBillCalculations()"></td><td><input class="narrow" type="number" min="0" value="${x.u}" oninput="state.items[${i}].u=this.value;refreshBillCalculations()"></td><td class="item-total">${money((+x.q||0)*(+x.u||0))}</td><td><button class="remove" onclick="state.items.splice(${i},1);render()">×</button></td></tr>`).join('')}</table></div><button class="ghost" style="margin-top:10px" onclick="state.items.push({p:'',q:1,u:0});render()">＋ Add Item</button></div></section><aside class="card"><div class="field"><label>Payment Mode <span style="color:var(--danger)">*</span></label><select id="paymentMode" required onchange="state.payment=this.value"><option value="" ${state.payment===''?'selected':''}>Select payment mode</option><option value="Cash" ${state.payment==='Cash'?'selected':''}>Cash</option><option value="UPI" ${state.payment==='UPI'?'selected':''}>UPI</option><option value="Balance" ${state.payment==='Balance'?'selected':''}>Balance</option></select></div><div class="field" style="margin-top:12px"><label>Discount</label><div style="display:grid;grid-template-columns:1fr 92px;gap:7px"><input type="number" min="0" value="${state.discount}" oninput="state.discount=this.value;refreshBillCalculations()"><select onchange="state.discountType=this.value;refreshBillCalculations()"><option value="amount" ${state.discountType==='amount'?'selected':''}>Amount</option><option value="percent" ${state.discountType==='percent'?'selected':''}>%</option></select></div></div><div class="totals"><div class="totalbox"><div class="totalrow"><span>Subtotal</span><b id="bill-subtotal">${money(sum)}</b></div><div class="totalrow"><span>Discount</span><b id="bill-discount">-${money(disc)}</b></div>${state.settings.taxRate?`<div class="totalrow"><span>${state.settings.taxLabel} (${state.settings.taxRate}%)</span><b id="bill-tax">${money(tax)}</b></div>`:''}<div class="totalrow grand"><span>Grand Total</span><b id="bill-grand">${money(grand)}</b></div><div class="word">Amount in words: <b id="bill-words">${words(grand)}</b></div></div></div><div class="section muted" style="font-size:12px">Date/time will be recorded automatically. Created by: <b>${state.user}</b></div></aside></div>`}
-function refreshBillCalculations(){let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;document.querySelectorAll('.item-total').forEach((el,i)=>{let x=state.items[i];if(x)el.textContent=money((+x.q||0)*(+x.u||0))});let s=document.querySelector('#bill-subtotal'),d=document.querySelector('#bill-discount'),t=document.querySelector('#bill-tax'),g=document.querySelector('#bill-grand'),w=document.querySelector('#bill-words');if(s)s.textContent=money(sum);if(d)d.textContent='-'+money(disc);if(t)t.textContent=money(tax);if(g)g.textContent=money(grand);if(w)w.textContent=words(grand)}
-function renderNewPreserve(){let cn=document.querySelector('#cn')?.value||'',cp=document.querySelector('#cp')?.value||'',ca=document.querySelector('#ca')?.value||'';state.customer={name:cn,phone:cp,address:ca};refreshBillCalculations();}
-function bills(){let h=state.history;return `<div class="pagehead"><div><h2>Bill History</h2><div class="muted">Search bills directly</div></div></div><div class="card"><div class="formgrid"><div class="field"><label>Search Type</label><select id="searchMode" onchange="setHistoryMode(this.value)"><option value="date" ${h.mode==='date'?'selected':''}>Particular Date</option><option value="range" ${h.mode==='range'?'selected':''}>Between Two Dates</option></select></div>${h.mode==='date'?`<div class="field"><label>Date</label><input id="historyDate" type="date" value="${h.date}"></div>`:`<div class="field"><label>From Date</label><input id="historyFrom" type="date" value="${h.from}"></div><div class="field"><label>To Date</label><input id="historyTo" type="date" value="${h.to}"></div>`}<div class="field"><label>Customer / Bill No. (optional)</label><input id="historyQuery" value="${h.query}" placeholder="Customer or bill number"></div><div class="field"><label>Payment</label><select id="historyPayment"><option value="All" ${h.payment==='All'?'selected':''}>All</option><option value="Cash" ${h.payment==='Cash'?'selected':''}>Cash</option><option value="UPI" ${h.payment==='UPI'?'selected':''}>UPI</option><option value="Balance" ${h.payment==='Balance'?'selected':''}>Balance</option></select></div></div><div class="actions" style="margin-top:14px"><button class="primary" onclick="searchBillHistory()">🔎 Search </button><button class="ghost" onclick="clearBillHistorySearch()">Clear</button></div><div id="billtable" style="margin-top:15px">${h.results===null?'<div class="empty">Choose a date or date range, then click Search.</div>':billTable(h.results)}</div></div>`}
-function setHistoryMode(mode){state.history.mode=mode;state.history.results=null;render()}
-function clearBillHistorySearch(){state.history={mode:'date',date:'',from:'',to:'',query:'',payment:'All',results:null,loading:false};render()}
-async function searchBillHistory(){let h=state.history;h.results=null;h.loading=true;const mode=document.querySelector('#searchMode')?.value||'date';h.mode=mode;h.date=document.querySelector('#historyDate')?.value||'';h.from=document.querySelector('#historyFrom')?.value||'';h.to=document.querySelector('#historyTo')?.value||'';h.query=(document.querySelector('#historyQuery')?.value||'').trim();h.payment=document.querySelector('#historyPayment')?.value||'All';if(mode==='date'&&!h.date){toast('Please select a date');h.loading=false;return}if(mode==='range'&&(!h.from||!h.to)){toast('Please select both dates');h.loading=false;return}if(mode==='range'&&h.from>h.to){toast('From date cannot be after To date');h.loading=false;return}const btn=document.querySelector('.actions .primary');if(btn){btn.disabled=true;btn.textContent='Searching...'}try{const response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'searchBills',mode,date:h.date,fromDate:h.from,toDate:h.to,query:h.query,payment:h.payment})});const result=await response.json();if(!response.ok||!result.success)throw new Error(result.error||'Search failed');h.results=result.bills||[];if(!h.results.length)toast(mode==='date'?`No data for ${h.date}`:`No data between ${h.from} and ${h.to}`);else toast(`${h.results.length} bill(s) found`);render()}catch(e){h.results=[];toast('Search failed: '+e.message);render()}finally{}}
-function billTable(bs){if(!bs||!bs.length)return '<div class="empty">No data found for the selected search.</div>';return `<div class="tablewrap"><table class="table"><tr><th>Bill No.</th><th>Date</th><th>Customer</th><th>Total</th><th>Payment</th><th>Created By</th><th></th></tr>${bs.map(b=>`<tr><td><b>${b.id||b.billNo||''}</b></td><td>${b.date||''}</td><td>${b.customer||'Walk-in'}</td><td>${money(billGrand(b))}</td><td><span class="badge">${b.payment||''}</span></td><td>${b.user||''}</td><td><button class="ghost" onclick="printBill('${b.id||b.billNo}')">Print</button></td></tr>`).join('')}</table></div>`}
+function render(){let app=document.querySelector('#app');document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.colorScheme=state.theme;if(state.theme==='light'){document.documentElement.style.setProperty('--bg','#f4f7fb');document.documentElement.style.setProperty('--surface','#ffffff');document.documentElement.style.setProperty('--surface2','#f8fafc');document.documentElement.style.setProperty('--text','#172033');document.documentElement.style.setProperty('--muted','#667085');document.documentElement.style.setProperty('--border','#e4e8ef');document.documentElement.style.setProperty('--accent2','#ebe8ff')}else{document.documentElement.style.setProperty('--bg','#10141b');document.documentElement.style.setProperty('--surface','#171c24');document.documentElement.style.setProperty('--surface2','#202733');document.documentElement.style.setProperty('--text','#f4f7fb');document.documentElement.style.setProperty('--muted','#a8b0bf');document.documentElement.style.setProperty('--border','#303846');document.documentElement.style.setProperty('--accent2','#2b2550')}app.innerHTML=`<header class="top"><div class="topin"><div class="brand"><div class="logo">SG</div><div><h1>${state.settings.name}</h1><small>Billing & Sales</small></div></div><nav class="nav">${['dashboard','new','bills','outstanding','settings'].map(v=>`<button class="${state.view===v?'active':''}" onclick="go('${v}')">${({dashboard:'Dashboard',new:'New Bill',bills:'Bills',outstanding:'Outstanding',settings:'Admin'})[v]}</button>`).join('')}<button onclick="toggleTheme()">${state.theme==='dark'?'☀ Light':'☾ Dark'}</button></nav></div></header><main class="main">${state.view==='dashboard'?dashboard():state.view==='new'?newBill():state.view==='bills'?bills():state.view==='outstanding'?outstanding():settings()}</main><div id="toast"></div>`}
+function dashboard(){
+  let localToday=state.bills.filter(b=>b.iso===todayParts().iso||b.date===todayParts().label);
+  let displayToday=state.googleToday.length?state.googleToday:localToday;
+  let sales=displayToday.reduce((s,b)=>s+billGrand(b),0);
+  let cash=displayToday.filter(b=>b.payment==='Cash').reduce((s,b)=>s+billGrand(b),0);
+  let upi=displayToday.filter(b=>b.payment==='UPI').reduce((s,b)=>s+billGrand(b),0);
+  let bal=displayToday.filter(b=>b.payment==='Balance').reduce((s,b)=>s+billGrand(b),0);
+
+  setTimeout(loadTodayFromGoogle,0);
+
+  return `<div class="pagehead">
+    <div>
+      <h2>Dashboard</h2>
+      <div class="muted">Today's billing overview</div>
+    </div>
+    <button class="primary" onclick="go('new')">＋ New Bill</button>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="label">Today's Bills</div><div class="metric">${displayToday.length}</div></div>
+    <div class="card"><div class="label">Today's Sales</div><div class="metric">${money(sales)}</div></div>
+    <div class="card"><div class="label">Cash + UPI</div><div class="metric">${money(cash+upi)}</div></div>
+    <div class="card"><div class="label">Outstanding</div><div class="metric">${money(bal)}</div></div>
+  </div>
+
+  <div class="section card">
+    <div class="pagehead">
+      <div>
+        <h3 style="margin:0">Today's Bills</h3>
+        <small class="muted">Bills recorded in Google Sheets for today</small>
+      </div>
+      <button class="ghost" onclick="loadTodayFromGoogle(true)">↻ Refresh</button>
+    </div>
+
+    ${displayToday.length ? `
+      <div class="tablewrap">
+        <table class="table">
+          <tr>
+            <th>Bill No.</th>
+            <th>Customer</th>
+            <th>Bill Amount</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Created By</th>
+            <th>Payment</th>
+          </tr>
+          ${displayToday.map(b=>`
+            <tr>
+              <td><b>${b.id||b.billNo||''}</b></td>
+              <td>${b.customer||b.customerName||'Walk-in'}</td>
+              <td>${money(billGrand(b))}</td>
+              <td>${b.date||''}</td>
+              <td>${b.time||''}</td>
+              <td>${b.user||b.createdBy||''}</td>
+              <td><span class="badge">${b.payment||b.paymentMode||''}</span></td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    ` : '<div class="empty">No bills recorded for today.</div>'}
+  </div>
+
+  <div class="section card">
+    <div class="pagehead">
+      <div>
+        <h3 style="margin:0">Today's Outstanding</h3>
+        <small class="muted">Unpaid bills created today</small>
+      </div>
+      <button class="ghost" onclick="go('outstanding')">View all</button>
+    </div>
+    ${displayToday.filter(b=>(b.payment||b.paymentMode)==='Balance').length ? `
+      <div class="tablewrap">
+        <table class="table">
+          <tr><th>Bill No.</th><th>Customer</th><th>Amount</th><th>Date/Time</th></tr>
+          ${displayToday.filter(b=>(b.payment||b.paymentMode)==='Balance').map(b=>`
+            <tr>
+              <td>${b.id||b.billNo||''}</td>
+              <td>${b.customer||b.customerName||'Walk-in'}</td>
+              <td>${money(billGrand(b))}</td>
+              <td>${b.date||''} ${b.time||''}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    ` : '<div class="empty">No outstanding bills today.</div>'}
+  </div>`;
+}
+
+function newBill(){
+  let sum = state.items.reduce(
+    (s,x) => s + (+x.q || 0) * (+x.u || 0),
+    0
+  );
+
+  let discount = +state.discount || 0;
+
+  let disc = state.discountType === 'percent'
+    ? sum * discount / 100
+    : discount;
+
+  let after = Math.max(0, sum - disc);
+
+  let tax = state.settings.taxRate
+    ? after * state.settings.taxRate / 100
+    : 0;
+
+  let grand = after + tax;
+
+  return `
+    <div class="pagehead">
+      <div>
+        <h2>New Bill</h2>
+        <div class="muted">
+          Bill No. <b>${billNo()}</b> · automatically generated
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" onclick="resetBill()">
+          Clear
+        </button>
+
+        <button class="primary" onclick="saveBill()">
+          Save & Print
+        </button>
+      </div>
+    </div>
+
+    <div class="billbox">
+
+      <section class="card">
+
+        <div class="formgrid">
+
+          <div class="field">
+            <label>Customer Name</label>
+
+            <input
+              id="cn"
+              value="${state.customer.name}"
+              placeholder="Optional"
+            >
+          </div>
+
+          <div class="field">
+            <label>Phone</label>
+
+            <input
+              id="cp"
+              value="${state.customer.phone}"
+              placeholder="Optional"
+            >
+          </div>
+
+          <div
+            class="field"
+            style="grid-column:1/-1"
+          >
+            <label>Address</label>
+
+            <input
+              id="ca"
+              value="${state.customer.address}"
+              placeholder="Optional"
+            >
+          </div>
+
+        </div>
+
+
+        <div class="items">
+
+          <div class="tablewrap">
+
+            <table class="table">
+
+              <tr>
+                <th>S.No.</th>
+                <th>Particular</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+
+              ${state.items.map((x,i) => `
+
+                <tr>
+
+                  <td>
+                    ${i + 1}
+                  </td>
+
+
+                  <td>
+
+                    <input
+                      value="${x.p}"
+                      oninput="
+                        state.items[${i}].p = this.value;
+                      "
+                    >
+
+                  </td>
+
+
+                  <td>
+
+                    <input
+                      class="narrow"
+                      type="number"
+                      min="0"
+                      value="${x.q}"
+                      oninput="
+                        state.items[${i}].q = this.value;
+                        refreshBillCalculations();
+                      "
+                    >
+
+                  </td>
+
+
+                  <td>
+
+                    <input
+                      class="narrow"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value="${x.u}"
+                      oninput="
+                        state.items[${i}].u = this.value;
+                        refreshBillCalculations();
+                      "
+                    >
+
+                  </td>
+
+
+                  <td class="item-total">
+                    ${money((+x.q || 0) * (+x.u || 0))}
+                  </td>
+
+
+                  <td>
+
+                    <button
+                      class="remove"
+                      onclick="
+                        state.items.splice(${i},1);
+                        render();
+                      "
+                    >
+                      ×
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              `).join('')}
+
+            </table>
+
+          </div>
+
+
+          <button
+            class="ghost"
+            style="margin-top:10px"
+            onclick="
+              state.items.push({
+                p:'',
+                q:1,
+                u:0
+              });
+              render();
+            "
+          >
+            ＋ Add Item
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <aside class="card">
+
+        <div class="field">
+
+          <label>Payment Mode <span style="color:var(--danger)">*</span></label>
+
+          <select
+            onchange="
+              state.payment = this.value;
+            "
+          >
+
+            <option
+              ${state.payment === 'Cash' ? 'selected' : ''}
+            >
+              Cash
+            </option>
+
+            <option
+              ${state.payment === 'UPI' ? 'selected' : ''}
+            >
+              UPI
+            </option>
+
+            <option
+              ${state.payment === 'Balance' ? 'selected' : ''}
+            >
+              Balance
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>Discount</label>
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:1fr 92px;
+              gap:7px
+            "
+          >
+
+            <input
+              id="discountInput"
+              type="number"
+              min="0"
+              step="0.01"
+              value="${state.discount}"
+              oninput="
+                state.discount = this.value;
+                refreshBillCalculations();
+              "
+            >
+
+
+            <select
+              id="discountType"
+              onchange="
+                state.discountType = this.value;
+                refreshBillCalculations();
+              "
+            >
+
+              <option
+                value="amount"
+                ${state.discountType === 'amount' ? 'selected' : ''}
+              >
+                Amount
+              </option>
+
+              <option
+                value="percent"
+                ${state.discountType === 'percent' ? 'selected' : ''}
+              >
+                %
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="totals">
+
+          <div class="totalbox">
+
+            <div class="totalrow">
+
+              <span>
+                Subtotal
+              </span>
+
+              <b id="bill-subtotal">
+                ${money(sum)}
+              </b>
+
+            </div>
+
+
+            <div class="totalrow">
+
+              <span>
+                Discount
+              </span>
+
+              <b id="bill-discount">
+                -${money(disc)}
+              </b>
+
+            </div>
+
+
+            ${
+              state.settings.taxRate
+              ?
+              `
+                <div class="totalrow">
+
+                  <span>
+                    ${state.settings.taxLabel}
+                    (${state.settings.taxRate}%)
+                  </span>
+
+                  <b id="bill-tax">
+                    ${money(tax)}
+                  </b>
+
+                </div>
+              `
+              :
+              ''
+            }
+
+
+            <div class="totalrow grand">
+
+              <span>
+                Grand Total
+              </span>
+
+              <b id="bill-grand">
+                ${money(grand)}
+              </b>
+
+            </div>
+
+
+            <div class="word">
+
+              Amount in words:
+
+              <b id="bill-words">
+                ${words(grand)}
+              </b>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="section muted"
+          style="font-size:12px"
+        >
+
+          Date/time will be recorded automatically.
+
+          Created by:
+
+          <b>${state.user}</b>
+
+        </div>
+
+      </aside>
+
+    </div>
+  `;
+}
+
+
+function refreshBillCalculations(){
+
+  let sum = state.items.reduce(
+    (s,x) =>
+      s + (+x.q || 0) * (+x.u || 0),
+    0
+  );
+
+
+  let discount = +state.discount || 0;
+
+
+  let disc =
+    state.discountType === 'percent'
+      ? sum * discount / 100
+      : discount;
+
+
+  let after =
+    Math.max(0, sum - disc);
+
+
+  let tax =
+    state.settings.taxRate
+      ? after * state.settings.taxRate / 100
+      : 0;
+
+
+  let grand =
+    after + tax;
+
+
+  /*
+   * IMPORTANT:
+   * Do NOT call render() here.
+   *
+   * Updating the DOM directly keeps
+   * the cursor inside the input field.
+   */
+
+
+  document
+    .querySelectorAll('.item-total')
+    .forEach((el,i) => {
+
+      let x = state.items[i];
+
+      if(x){
+
+        el.textContent =
+          money(
+            (+x.q || 0) *
+            (+x.u || 0)
+          );
+
+      }
+
+    });
+
+
+  let subtotal =
+    document.querySelector('#bill-subtotal');
+
+  let discountEl =
+    document.querySelector('#bill-discount');
+
+  let taxEl =
+    document.querySelector('#bill-tax');
+
+  let grandEl =
+    document.querySelector('#bill-grand');
+
+  let wordsEl =
+    document.querySelector('#bill-words');
+
+
+  if(subtotal){
+
+    subtotal.textContent =
+      money(sum);
+
+  }
+
+
+  if(discountEl){
+
+    discountEl.textContent =
+      '-' + money(disc);
+
+  }
+
+
+  if(taxEl){
+
+    taxEl.textContent =
+      money(tax);
+
+  }
+
+
+  if(grandEl){
+
+    grandEl.textContent =
+      money(grand);
+
+  }
+
+
+  if(wordsEl){
+
+    wordsEl.textContent =
+      words(grand);
+
+  }
+
+}
+function renderNewPreserve(){let cn=document.querySelector('#cn')?.value||'',cp=document.querySelector('#cp')?.value||'',ca=document.querySelector('#ca')?.value||'';state.customer={name:cn,phone:cp,address:ca};render();}
+function bills(){
+  return `<div class="pagehead">
+    <div>
+      <h2>Bill History</h2>
+      <div class="muted">Search bills directly from Google Sheets</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="formgrid">
+      <div class="field">
+        <label>Search by Customer / Bill No.</label>
+        <input id="historyQuery" placeholder="Customer name or bill number">
+      </div>
+
+      <div class="field">
+        <label>Particular Date</label>
+        <input id="historyDate" type="date">
+      </div>
+
+      <div class="field">
+        <label>Payment</label>
+        <select id="historyPayment">
+          <option value="">All</option>
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Balance">Balance</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>From Date</label>
+        <input id="historyFrom" type="date">
+      </div>
+
+      <div class="field">
+        <label>To Date</label>
+        <input id="historyTo" type="date">
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:14px">
+      <button class="primary" id="historySearchBtn" onclick="searchBillHistory()">🔎 Search Google Sheet</button>
+      <button class="ghost" onclick="clearHistorySearch()">Clear</button>
+    </div>
+
+    <div id="historyStatus" class="muted" style="margin-top:12px"></div>
+
+    <div id="billtable" style="margin-top:15px">
+      <div class="empty">Select a particular date or enter a date range, then press Search.</div>
+    </div>
+  </div>`;
+}
+
+function historyQueryPayload(){
+  const date=document.querySelector('#historyDate')?.value||'';
+  const fromDate=document.querySelector('#historyFrom')?.value||'';
+  const toDate=document.querySelector('#historyTo')?.value||'';
+
+  return {
+    date,
+    fromDate,
+    toDate,
+    query:(document.querySelector('#historyQuery')?.value||'').trim(),
+    customer:(document.querySelector('#historyQuery')?.value||'').trim(),
+    billNo:(document.querySelector('#historyQuery')?.value||'').trim(),
+    paymentMode:document.querySelector('#historyPayment')?.value||''
+  };
+}
+
+async function searchBillHistory(){
+  const btn=document.querySelector('#historySearchBtn');
+  const status=document.querySelector('#historyStatus');
+  const table=document.querySelector('#billtable');
+
+  const s=historyQueryPayload();
+
+  if(!s.date && !(s.fromDate&&s.toDate) && !s.query){
+    status.textContent='Please select a particular date, or enter both From Date and To Date, or search by customer/bill number.';
+    table.innerHTML='<div class="empty">Search criteria required.</div>';
+    return;
+  }
+
+  if((s.fromDate&&!s.toDate)||(!s.fromDate&&s.toDate)){
+    status.textContent='Please enter both From Date and To Date.';
+    return;
+  }
+
+  if(s.fromDate && s.toDate && s.fromDate>s.toDate){
+    status.textContent='From Date cannot be after To Date.';
+    return;
+  }
+
+  btn.disabled=true;
+  btn.textContent='Searching...';
+  status.textContent='Searching Google Sheets...';
+
+  try{
+    const r=await fetch('/api/save-bill',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'searchBills',
+        search:s
+      })
+    });
+
+    const result=await r.json();
+
+    if(!r.ok || result.success===false){
+      throw new Error(result.error||'Search failed');
+    }
+
+    const rows=Array.isArray(result.bills)?result.bills:
+               Array.isArray(result.results)?result.results:[];
+
+    state.historyResults=rows;
+
+    if(!rows.length){
+      table.innerHTML='<div class="empty">No data found for the selected date/search criteria.</div>';
+      status.textContent='No data found.';
+    }else{
+      table.innerHTML=billTable(rows);
+      status.textContent=`${rows.length} bill(s) found in Google Sheets.`;
+    }
+
+  }catch(e){
+    console.error(e);
+    table.innerHTML='<div class="empty">Unable to fetch bill data from Google Sheets.</div>';
+    status.textContent=e.message||'Search failed.';
+  }finally{
+    btn.disabled=false;
+    btn.textContent='🔎 Search Google Sheet';
+  }
+}
+
+function clearHistorySearch(){
+  ['historyQuery','historyDate','historyFrom','historyTo'].forEach(id=>{
+    const el=document.querySelector('#'+id);
+    if(el) el.value='';
+  });
+
+  const p=document.querySelector('#historyPayment');
+  if(p) p.value='';
+
+  const status=document.querySelector('#historyStatus');
+  const table=document.querySelector('#billtable');
+
+  if(status) status.textContent='';
+  if(table) table.innerHTML='<div class="empty">Select a particular date or enter a date range, then press Search.</div>';
+}
+
+function billTable(bs){
+  if(!Array.isArray(bs)||!bs.length){
+    return '<div class="empty">No data found.</div>';
+  }
+
+  return `<div class="tablewrap">
+    <table class="table">
+      <tr>
+        <th>Bill No.</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Customer</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Created By</th>
+        <th></th>
+      </tr>
+      ${bs.map(b=>`
+        <tr>
+          <td><b>${b.id||b.billNo||''}</b></td>
+          <td>${b.date||''}</td>
+          <td>${b.time||''}</td>
+          <td>${b.customer||b.customerName||'Walk-in'}</td>
+          <td>${money(billGrand(b))}</td>
+          <td><span class="badge">${b.payment||b.paymentMode||''}</span></td>
+          <td>${b.user||b.createdBy||''}</td>
+          <td>${b.id ? `<button class="ghost" onclick="printBill('${b.id}')">Print</button>` : ''}</td>
+        </tr>
+      `).join('')}
+    </table>
+  </div>`;
+}
+
+async function loadTodayFromGoogle(force=false){
+  if(state.view!=='dashboard' && !force) return;
+
+  try{
+    const s={date:todayParts().iso};
+
+    const r=await fetch('/api/save-bill',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'searchBills',
+        search:s
+      })
+    });
+
+    const result=await r.json();
+
+    if(!r.ok || result.success===false){
+      console.warn('Today overview search failed',result.error);
+      return;
+    }
+
+    const rows=Array.isArray(result.bills)?result.bills:
+               Array.isArray(result.results)?result.results:[];
+
+    state.googleToday=rows;
+
+    if(state.view==='dashboard'){
+      render();
+    }
+
+  }catch(e){
+    console.warn('Unable to load today overview',e);
+  }
+}
+
 function outstanding(){let bs=state.bills.filter(b=>b.payment==='Balance');return `<div class="pagehead"><div><h2>Outstanding / Balance</h2><div class="muted">Unpaid bills and customer balances</div></div></div><div class="card"><div class="grid" style="margin-bottom:15px"><div><div class="label">Outstanding Bills</div><div class="metric">${bs.length}</div></div><div><div class="label">Outstanding Amount</div><div class="metric">${money(bs.reduce((s,b)=>s+total(b),0))}</div></div></div>${billTable(bs)}</div>`}
 function settings(){return `<div class="pagehead"><div><h2>Admin Settings</h2><div class="muted">Shop identity, tax, currency and appearance</div></div><button class="primary" onclick="saveSettings()">Save Settings</button></div><div class="settings"><section class="card"><h3 style="margin-top:0">Shop Details</h3><div class="field"><label>Billing App Name</label><input id="sn" value="${state.settings.name}"></div><div class="field" style="margin-top:12px"><label>Document Number Label</label><input id="gstlabel" value="${state.settings.gstLabel}" placeholder="GST Number, PAN Number, etc."></div><div class="field" style="margin-top:12px"><label>Document Number</label><input id="gst" value="${state.settings.gst}" placeholder="Enter number"></div><div class="field" style="margin-top:12px"><label>Mobile</label><input id="mob" value="${state.settings.mobile}"></div><div class="field" style="margin-top:12px"><label>Address</label><textarea id="addr">${state.settings.address}</textarea></div></section><section class="card"><h3 style="margin-top:0">Currency & Tax</h3><div class="field"><label>Currency</label><select id="cur"><option value="INR" ${state.currency==='INR'?'selected':''}>INR — Indian Rupee</option><option value="NPR" ${state.currency==='NPR'?'selected':''}>NPR — Nepali Rupee</option></select></div><div class="field" style="margin-top:12px"><label>Tax Label</label><input id="taxlabel" value="${state.settings.taxLabel}" placeholder="Tax Rate, VAT, GST, etc."></div><div class="field" style="margin-top:12px"><label>Tax Rate (%) — Admin only</label><input id="taxrate" type="number" min="0" max="100" step="0.01" value="${state.settings.taxRate}"></div><p class="muted" style="font-size:12px">Set 0 for no tax. The configured label and rate appear on bills; billing users cannot change the rate.</p><hr style="border:0;border-top:1px solid var(--border);margin:20px 0"><h3>Appearance</h3><div class="formgrid"><div class="field"><label>Theme</label><select id="theme"><option value="dark" ${state.theme==='dark'?'selected':''}>Dark</option><option value="light" ${state.theme==='light'?'selected':''}>Light</option></select></div><div class="field"><label>Theme Color</label><input id="accent" type="color" value="${state.settings.accent}"></div></div><p class="muted" style="font-size:12px">Default theme is dark. Admin controls the accent color.</p><hr style="border:0;border-top:1px solid var(--border);margin:20px 0"><h3>Users & Permissions</h3><p class="muted">Prototype roles: Admin and Billing User. Production version will use secure authentication and server-side role checks.</p></section></div>`}
-function saveSettings(){state.settings={...state.settings,name:document.querySelector('#sn').value,gstLabel:document.querySelector('#gstlabel').value.trim()||'GST Number',gst:document.querySelector('#gst').value,mobile:document.querySelector('#mob').value,address:document.querySelector('#addr').value,taxLabel:document.querySelector('#taxlabel').value.trim()||'Tax Rate',taxRate:+document.querySelector('#taxrate').value||0,accent:document.querySelector('#accent').value,gstRates:(+document.querySelector('#taxrate').value||0)>0};state.currency=document.querySelector('#cur').value;state.theme=document.querySelector('#theme').value;document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.setProperty('--accent2',state.theme==='dark'?'#2b2550':'#ebe8ff');document.documentElement.style.colorScheme=state.theme;toast('Settings saved');render()}
-async function saveBill(){let now=new Date(),payment=document.querySelector('#paymentMode')?.value||state.payment;if(!payment){toast('Please select a payment mode');document.querySelector('#paymentMode')?.focus();return}let validItems=state.items.filter(x=>String(x.p||'').trim()||(+x.q||0)>0||(+x.u||0)>0);if(!validItems.length){toast('Please add at least one item');return}let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;let customerName=document.querySelector('#cn')?.value.trim()||'',customerPhone=document.querySelector('#cp')?.value.trim()||'',customerAddress=document.querySelector('#ca')?.value.trim()||'';let b={billNo:billNo(),id:billNo(),date:now.toISOString(),customerName,customerPhone,customerAddress,customer:customerName,phone:customerPhone,address:customerAddress,items:JSON.parse(JSON.stringify(state.items)),paymentMode:payment,payment,createdBy:state.user,user:state.user,discountType:state.discountType,discount,subtotal:sum,taxRate:state.settings.taxRate,taxLabel:state.settings.taxLabel,taxAmount:tax,grandTotal:grand,currency:state.currency};let btn=document.querySelector('.actions .primary');if(btn){btn.disabled=true;btn.textContent='Saving...'}try{let response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveBill',bill:b})});let result=await response.json();if(!response.ok||!result.success)throw new Error(result.error||'Unable to save bill');b.id=result.billNo||b.id;const displayDate=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});state.bills.unshift({...b,date:displayDate});toast('Bill saved to Google Sheet: '+b.id);printBill(b.id);resetBill()}catch(error){toast('Save failed: '+error.message)}finally{if(btn){btn.disabled=false;btn.textContent='Save & Print'}}}
+function saveSettings(){state.settings={...state.settings,name:document.querySelector('#sn').value,gstLabel:document.querySelector('#gstlabel').value.trim()||'GST Number',gst:document.querySelector('#gst').value,mobile:document.querySelector('#mob').value,address:document.querySelector('#addr').value,taxLabel:document.querySelector('#taxlabel').value.trim()||'Tax Rate',taxRate:+document.querySelector('#taxrate').value||0,accent:document.querySelector('#accent').value,gstRates:(+document.querySelector('#taxrate').value||0)>0};state.currency=document.querySelector('#cur').value;state.theme=document.querySelector('#theme').value;document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.setProperty('--accent2',state.theme==='dark'?'#2b2550':'#ebe8ff');document.documentElement.style.colorScheme=state.theme;persist();toast('Settings saved');render()}
+async function saveBill(){
+  const payment=document.querySelector('#paymentMode')?.value||state.payment||'';
+
+  if(!payment){
+    toast('Please select a payment mode.');
+    document.querySelector('#paymentMode')?.focus();
+    return;
+  }
+
+  const items=JSON.parse(JSON.stringify(state.items));
+
+  if(!items.some(x=>(x.p||'').trim() && (+x.q||0)>0 && (+x.u||0)>=0)){
+    toast('Please add at least one valid item.');
+    return;
+  }
+
+  let t=todayParts();
+
+  let b={
+    id:billNo(),
+    date:t.label,
+    iso:t.iso,
+    time:t.time,
+    customer:document.querySelector('#cn').value.trim(),
+    phone:document.querySelector('#cp').value.trim(),
+    address:document.querySelector('#ca').value.trim(),
+    items:items,
+    payment:payment,
+    user:state.user,
+    discountType:state.discountType,
+    discount:+state.discount||0,
+    taxRate:state.settings.taxRate,
+    taxLabel:state.settings.taxLabel
+  };
+
+  const result=await syncBillToGoogle(b);
+
+  if(!result.success){
+    toast('Save failed: '+(result.error||'Google Sheets error'));
+    return;
+  }
+
+  state.bills.unshift(b);
+  persist();
+
+  toast('Bill saved: '+b.id);
+  printBill(b.id);
+  resetBill();
+
+  if(state.view==='dashboard'){
+    loadTodayFromGoogle(true);
+  }
+}
+
 function resetBill(){state.items=[{p:'',q:1,u:0}];state.customer={name:'',phone:'',address:''};state.payment='';state.discountType='amount';state.discount=0;render()}
-function printBill(id){let b=state.bills.find(x=>x.id===id)||((state.history.results||[]).find(x=>x.id===id||x.billNo===id));if(!b)return;let sum=total(b),disc=b.discountType==='percent'?sum*(b.discount||0)/100:(b.discount||0),after=Math.max(0,sum-disc),tax=(b.taxRate||0)*after/100,grand=after+tax,taxLabel=b.taxLabel||state.settings.taxLabel;let rows=b.items.map((x,i)=>`<tr><td>${i+1}</td><td>${x.p||''}</td><td>${x.q}</td><td>${money(x.u)}</td><td>${money((+x.q||0)*(+x.u||0))}</td></tr>`).join('');let w=window.open('','_blank','width=800,height=900');w.document.write(`<html><head><title>${b.id}</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#555}.meta{display:flex;justify-content:space-between;margin:20px 0}.customer{border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:12px 0}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ccc;padding:8px;text-align:left}th{background:#f2f2f2}.right{text-align:right}.total{margin-left:auto;width:320px;margin-top:18px}.grand{font-size:20px;font-weight:bold;border-top:2px solid #111;padding-top:10px}.words{margin-top:10px;color:#555}@media print{@page{size:auto;margin:8mm}body{padding:0}}</style></head><body><h1>${state.settings.name}</h1><div class="sub">${state.settings.gstLabel}: ${state.settings.gst}</div><div class="sub">${state.settings.mobile||''} ${state.settings.address?'· '+state.settings.address:''}</div><div class="meta"><span><b>Bill No.</b> ${b.id}</span><span><b>Date</b> ${b.date}</span></div><div class="customer"><b>Customer:</b> ${b.customer||'Walk-in'} ${b.phone?' · '+b.phone:''}<br>${b.address||''}</div><table><tr><th>S.No.</th><th>Particular</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr>${rows}</table><div class="total"><div>Subtotal: <b>${money(sum)}</b></div><div>Discount: <b>-${money(disc)}</b></div>${b.taxRate?`<div>${taxLabel} (${b.taxRate}%): <b>${money(tax)}</b></div>`:''}<div>Payment: <b>${b.payment}</b></div><div class="grand">Grand Total: ${money(grand)}</div><div class="words">${words(grand)}</div></div><p style="margin-top:35px;font-size:12px">Created by: ${b.user}</p><script>window.print()<\/script></body></html>`);w.document.close()}
-function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';document.documentElement.style.colorScheme=state.theme;render()}
-function toast(t){let el=document.querySelector('#toast');if(!el){let d=document.createElement('div');d.id='toast';document.body.appendChild(d);el=d}el.innerHTML='<div class="toast">'+t+'</div>';setTimeout(()=>el.innerHTML='',3000)}function go(v){if(v==='settings'&&state.role!=='ADMIN'){toast('Admin access required');return}state.view=v;render()}restoreSession();render();
+function printBill(id){let b=state.bills.find(x=>x.id===id);if(!b)return;let sum=total(b),disc=b.discountType==='percent'?sum*(b.discount||0)/100:(b.discount||0),after=Math.max(0,sum-disc),tax=(b.taxRate||0)*after/100,grand=after+tax,taxLabel=b.taxLabel||state.settings.taxLabel;let rows=b.items.map((x,i)=>`<tr><td>${i+1}</td><td>${x.p||''}</td><td>${x.q}</td><td>${money(x.u)}</td><td>${money((+x.q||0)*(+x.u||0))}</td></tr>`).join('');let w=window.open('','_blank','width=800,height=900');w.document.write(`<html><head><title>${b.id}</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#555}.meta{display:flex;justify-content:space-between;margin:20px 0}.customer{border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:12px 0}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ccc;padding:8px;text-align:left}th{background:#f2f2f2}.right{text-align:right}.total{margin-left:auto;width:320px;margin-top:18px}.grand{font-size:20px;font-weight:bold;border-top:2px solid #111;padding-top:10px}.words{margin-top:10px;color:#555}@media print{@page{size:auto;margin:8mm}body{padding:0}}</style></head><body><h1>${state.settings.name}</h1><div class="sub">${state.settings.gstLabel}: ${state.settings.gst}</div><div class="sub">${state.settings.mobile||''} ${state.settings.address?'· '+state.settings.address:''}</div><div class="meta"><span><b>Bill No.</b> ${b.id}</span><span><b>Date/Time</b> ${b.date} ${b.time||''}</span></div><div class="customer"><b>Customer:</b> ${b.customer||'Walk-in'} ${b.phone?' · '+b.phone:''}<br>${b.address||''}</div><table><tr><th>S.No.</th><th>Particular</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr>${rows}</table><div class="total"><div>Subtotal: <b>${money(sum)}</b></div><div>Discount: <b>-${money(disc)}</b></div>${b.taxRate?`<div>${taxLabel} (${b.taxRate}%): <b>${money(tax)}</b></div>`:''}<div>Payment: <b>${b.payment}</b></div><div class="grand">Grand Total: ${money(grand)}</div><div class="words">${words(grand)}</div></div><p style="margin-top:35px;font-size:12px">Created by: ${b.user}</p><script>window.print()<\/script></body></html>`);w.document.close()}
+function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';persist();document.documentElement.style.colorScheme=state.theme;render()}
+async function syncBillToGoogle(b){
+  try{
+    const r=await fetch('/api/save-bill',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(b)
+    });
+
+    let result;
+    try{
+      result=await r.json();
+    }catch(e){
+      return {success:false,error:'Invalid server response'};
+    }
+
+    if(!r.ok || result.success===false){
+      return {
+        success:false,
+        error:result.error||'Google Sheets save failed'
+      };
+    }
+
+    return result;
+
+  }catch(e){
+    console.warn('Offline or API unavailable',e);
+    return {
+      success:false,
+      error:'Unable to connect to billing server'
+    };
+  }
+}
+
+function toast(t){let el=document.querySelector('#toast');if(el){el.innerHTML='<div class="toast">'+t+'</div>';setTimeout(()=>el.innerHTML='',2600)}}function go(v){state.view=v;render()}render();
 </script></body></html>
