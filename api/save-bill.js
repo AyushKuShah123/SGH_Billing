@@ -1,83 +1,91 @@
 export default async function handler(req, res) {
 
-  // Only POST requests are allowed
+  // =========================================================
+  // ONLY POST REQUESTS
+  // =========================================================
+
   if (req.method !== 'POST') {
+
     return res.status(405).json({
       success: false,
       error: 'POST only'
     });
+
   }
 
 
-  // Google Apps Script Web App URL
-  const url = process.env.GOOGLE_APPS_SCRIPT_URL;
+  // =========================================================
+  // GOOGLE APPS SCRIPT URL
+  // =========================================================
+
+  const url =
+    process.env.GOOGLE_APPS_SCRIPT_URL;
 
 
-  // Check environment variable
   if (!url) {
+
     return res.status(503).json({
       success: false,
-      error: 'GOOGLE_APPS_SCRIPT_URL is not configured'
+      error:
+        'GOOGLE_APPS_SCRIPT_URL is not configured'
     });
+
   }
 
 
   try {
 
-    const incoming = req.body || {};
+    const incoming =
+      req.body || {};
 
 
-    /*
-     * =========================================================
-     * BILL HISTORY SEARCH
-     * =========================================================
-     *
-     * Frontend sends:
-     *
-     * {
-     *   action: "searchBills",
-     *   search: {
-     *      date: "...",
-     *      fromDate: "...",
-     *      toDate: "...",
-     *      customer: "...",
-     *      billNo: "...",
-     *      paymentMode: "..."
-     *   }
-     * }
-     *
-     * Forward it directly to Google Apps Script.
-     */
+    // =======================================================
+    // BILL HISTORY SEARCH
+    // =======================================================
 
-    if (incoming.action === 'searchBills') {
+    if (
+      incoming.action ===
+      'searchBills'
+    ) {
 
       const payload = {
-        action: 'searchBills',
-        search: incoming.search || {}
+
+        action:
+          'searchBills',
+
+        search:
+          incoming.search || {}
+
       };
 
 
-      const response = await fetch(url, {
+      const response =
+        await fetch(url, {
 
-        method: 'POST',
+          method: 'POST',
 
-        headers: {
-          'Content-Type': 'application/json'
-        },
+          headers: {
+            'Content-Type':
+              'application/json'
+          },
 
-        body: JSON.stringify(payload)
+          body:
+            JSON.stringify(payload)
 
-      });
+        });
 
 
-      const text = await response.text();
+      const text =
+        await response.text();
 
 
       let result;
 
+
       try {
 
-        result = JSON.parse(text);
+        result =
+          JSON.parse(text);
 
       } catch (e) {
 
@@ -97,42 +105,111 @@ export default async function handler(req, res) {
 
 
       return res
-        .status(response.ok ? 200 : 502)
+        .status(
+          response.ok
+            ? 200
+            : 502
+        )
         .json(result);
 
     }
 
 
 
-    /*
-     * =========================================================
-     * SAVE BILL
-     * =========================================================
-     *
-     * The frontend may send either:
-     *
-     * 1. Direct bill:
-     *
-     * {
-     *   id: "...",
-     *   items: [...]
-     * }
-     *
-     * OR
-     *
-     * 2. Wrapped bill:
-     *
-     * {
-     *   bill: {
-     *      id: "...",
-     *      items: [...]
-     *   }
-     * }
-     */
+    // =======================================================
+    // TODAY'S BILL OVERVIEW
+    // =======================================================
 
+    if (
+      incoming.action ===
+      'todayBills'
+    ) {
+
+      const payload = {
+
+        action:
+          'todayBills'
+
+      };
+
+
+      const response =
+        await fetch(url, {
+
+          method: 'POST',
+
+          headers: {
+            'Content-Type':
+              'application/json'
+          },
+
+          body:
+            JSON.stringify(payload)
+
+        });
+
+
+      const text =
+        await response.text();
+
+
+      let result;
+
+
+      try {
+
+        result =
+          JSON.parse(text);
+
+      } catch (e) {
+
+        return res.status(502).json({
+
+          success: false,
+
+          error:
+            'Invalid response from Google Apps Script',
+
+          response:
+            text
+
+        });
+
+      }
+
+
+      return res
+        .status(
+          response.ok
+            ? 200
+            : 502
+        )
+        .json(result);
+
+    }
+
+
+
+    // =======================================================
+    // SAVE BILL
+    // =======================================================
 
     let bill;
 
+
+    /*
+     * Frontend can send:
+     *
+     * {
+     *   bill: {...}
+     * }
+     *
+     * OR directly:
+     *
+     * {
+     *   items: [...]
+     * }
+     */
 
     if (
       incoming.bill &&
@@ -140,18 +217,20 @@ export default async function handler(req, res) {
       !Array.isArray(incoming.bill)
     ) {
 
-      bill = incoming.bill;
+      bill =
+        incoming.bill;
 
     } else {
 
-      bill = incoming;
+      bill =
+        incoming;
 
     }
 
 
-    /*
-     * Make sure bill is an object.
-     */
+    // =======================================================
+    // VALIDATE BILL
+    // =======================================================
 
     if (
       !bill ||
@@ -171,25 +250,28 @@ export default async function handler(req, res) {
     }
 
 
-    /*
-     * Make sure items exists.
-     */
+    // =======================================================
+    // ENSURE ITEMS ARRAY
+    // =======================================================
 
-    if (!Array.isArray(bill.items)) {
+    if (
+      !Array.isArray(
+        bill.items
+      )
+    ) {
 
       bill.items = [];
 
     }
 
 
-    /*
-     * Do not allow an empty bill to be sent.
-     *
-     * This gives a clear error instead of sending
-     * an invalid bill to Google Apps Script.
-     */
+    // =======================================================
+    // EMPTY BILL CHECK
+    // =======================================================
 
-    if (bill.items.length === 0) {
+    if (
+      bill.items.length === 0
+    ) {
 
       return res.status(400).json({
 
@@ -203,41 +285,66 @@ export default async function handler(req, res) {
     }
 
 
-    /*
-     * =========================================================
-     * SEND BILL TO GOOGLE APPS SCRIPT
-     * =========================================================
-     */
+    // =======================================================
+    // PAYMENT MODE CHECK
+    // =======================================================
+
+    const paymentMode =
+      bill.paymentMode ||
+      bill.payment ||
+      '';
+
+
+    if (!paymentMode) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        error:
+          'Payment mode is required'
+
+      });
+
+    }
+
+
+    // =======================================================
+    // SEND BILL TO GOOGLE APPS SCRIPT
+    // =======================================================
 
     const payload = {
 
-      action: 'saveBill',
+      action:
+        'saveBill',
 
-      bill: bill
+      bill:
+        bill
 
     };
 
 
-    const response = await fetch(url, {
+    const response =
+      await fetch(url, {
 
-      method: 'POST',
+        method: 'POST',
 
-      headers: {
+        headers: {
 
-        'Content-Type':
-          'application/json'
+          'Content-Type':
+            'application/json'
 
-      },
+        },
 
-      body:
-        JSON.stringify(payload)
+        body:
+          JSON.stringify(payload)
 
-    });
+      });
 
 
-    /*
-     * Read Google Apps Script response.
-     */
+    // =======================================================
+    // READ RESPONSE
+    // =======================================================
 
     const text =
       await response.text();
@@ -268,13 +375,16 @@ export default async function handler(req, res) {
     }
 
 
-    /*
-     * Return the actual Apps Script result
-     * back to index.html.
-     */
+    // =======================================================
+    // RETURN RESULT TO WEBSITE
+    // =======================================================
 
     return res
-      .status(response.ok ? 200 : 502)
+      .status(
+        response.ok
+          ? 200
+          : 502
+      )
       .json(result);
 
 
