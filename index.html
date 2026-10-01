@@ -15,7 +15,7 @@
 const API_URL='/api/save-bill';
 const USERS={admin:{password:'admin123',role:'ADMIN',name:'Admin'},cashier:{password:'cashier123',role:'USER',name:'Billing User'}};
 const state={view:'dashboard',loggedIn:false,role:'',user:'',currency:'INR',theme:'dark',settings:{name:'Shivam Gift House',gstLabel:'PAN Number',gst:'08XXXXXXXX00',mobile:'',address:'Jaipur, Rajasthan',taxLabel:'Tax Rate',taxRate:0,gstRates:false,accent:'#8b7cff'},bills:[],items:[{p:'',q:1,u:0}],customer:{name:'',phone:'',address:''},payment:'Cash',discountType:'amount',discount:0};
-
+const seed=[];
 state.bills=seed.map(x=>({id:x[0],date:x[1],customer:x[2],items:[{p:x[3],q:x[4],u:x[5]}],payment:x[6],user:x[7]}));
 function money(n){return new Intl.NumberFormat(state.currency==='NPR'?'en-NP':'en-IN',{style:'currency',currency:state.currency,maximumFractionDigits:2}).format(n||0)}
 function total(b){return b.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0)}
