@@ -27,7 +27,513 @@ function words(n){n=Math.round(n);if(!n)return 'Zero Only';let a=['','One','Two'
 function billNo(){let d=new Date(),yy=String(d.getFullYear()).slice(-2),day=String(d.getDate()).padStart(2,'0'),m=String.fromCharCode(65+d.getMonth()),prefix=`SGH-${yy}${day}${m}`;let nums=state.bills.filter(b=>b.id.startsWith(prefix)).map(b=>+b.id.slice(-4)||0);return prefix+String((Math.max(0,...nums)+1)).padStart(4,'0')}
 function render(){let app=document.querySelector('#app');document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.colorScheme=state.theme;if(state.theme==='light'){document.documentElement.style.setProperty('--bg','#f4f7fb');document.documentElement.style.setProperty('--surface','#ffffff');document.documentElement.style.setProperty('--surface2','#f8fafc');document.documentElement.style.setProperty('--text','#172033');document.documentElement.style.setProperty('--muted','#667085');document.documentElement.style.setProperty('--border','#e4e8ef');document.documentElement.style.setProperty('--accent2','#ebe8ff')}else{document.documentElement.style.setProperty('--bg','#10141b');document.documentElement.style.setProperty('--surface','#171c24');document.documentElement.style.setProperty('--surface2','#202733');document.documentElement.style.setProperty('--text','#f4f7fb');document.documentElement.style.setProperty('--muted','#a8b0bf');document.documentElement.style.setProperty('--border','#303846');document.documentElement.style.setProperty('--accent2','#2b2550')}app.innerHTML=`<header class="top"><div class="topin"><div class="brand"><div class="logo">SG</div><div><h1>${state.settings.name}</h1><small>Billing & Sales</small></div></div><nav class="nav">${['dashboard','new','bills','outstanding','settings'].map(v=>`<button class="${state.view===v?'active':''}" onclick="go('${v}')">${({dashboard:'Dashboard',new:'New Bill',bills:'Bills',outstanding:'Outstanding',settings:'Admin'})[v]}</button>`).join('')}<button onclick="toggleTheme()">${state.theme==='dark'?'☀ Light':'☾ Dark'}</button></nav></div></header><main class="main">${state.view==='dashboard'?dashboard():state.view==='new'?newBill():state.view==='bills'?bills():state.view==='outstanding'?outstanding():settings()}</main><div id="toast"></div>`}
 function dashboard(){let today=state.bills.filter(b=>b.date===todayParts().label),sales=today.reduce((s,b)=>s+total(b),0),cash=today.filter(b=>b.payment==='Cash').reduce((s,b)=>s+total(b),0),upi=today.filter(b=>b.payment==='UPI').reduce((s,b)=>s+total(b),0),bal=today.filter(b=>b.payment==='Balance').reduce((s,b)=>s+total(b),0);return `<div class="pagehead"><div><h2>Dashboard</h2><div class="muted">Today’s billing overview</div></div><button class="primary" onclick="go('new')">＋ New Bill</button></div><div class="grid"><div class="card"><div class="label">Today's Bills</div><div class="metric">${today.length}</div></div><div class="card"><div class="label">Today's Sales</div><div class="metric">${money(sales)}</div></div><div class="card"><div class="label">Cash + UPI</div><div class="metric">${money(cash+upi)}</div></div><div class="card"><div class="label">Outstanding</div><div class="metric">${money(bal)}</div></div></div><div class="section card"><div class="pagehead"><div><h3 style="margin:0">Today's Outstanding</h3><small class="muted">Unpaid bills created today</small></div><button class="ghost" onclick="go('outstanding')">View all</button></div>${today.filter(b=>b.payment==='Balance').length?`<div class="tablewrap"><table class="table"><tr><th>Bill No.</th><th>Customer</th><th>Amount</th><th>Created By</th></tr>${today.filter(b=>b.payment==='Balance').map(b=>`<tr><td>${b.id}</td><td>${b.customer||'Walk-in'}</td><td>${money(total(b))}</td><td>${b.user}</td></tr>`).join('')}</table></div>`:'<div class="empty">No outstanding bills today.</div>'}</div>`}
-function newBill(){let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;return `<div class="pagehead"><div><h2>New Bill</h2><div class="muted">Bill No. <b>${billNo()}</b> · automatically generated</div></div><div class="actions"><button class="ghost" onclick="resetBill()">Clear</button><button class="primary" onclick="saveBill()">Save & Print</button></div></div><div class="billbox"><section class="card"><div class="formgrid"><div class="field"><label>Customer Name</label><input id="cn" value="${state.customer.name}" placeholder="Optional"></div><div class="field"><label>Phone</label><input id="cp" value="${state.customer.phone}" placeholder="Optional"></div><div class="field" style="grid-column:1/-1"><label>Address</label><input id="ca" value="${state.customer.address}" placeholder="Optional"></div></div><div class="items"><div class="tablewrap"><table class="table"><tr><th>S.No.</th><th>Particular</th><th>Quantity</th><th>Unit Price</th><th>Total</th><th></th></tr>${state.items.map((x,i)=>`<tr><td>${i+1}</td><td><input value="${x.p}" oninput="state.items[${i}].p=this.value"></td><td><input class="narrow" type="number" min="0" value="${x.q}" oninput="state.items[${i}].q=this.value;renderNewPreserve()"></td><td><input class="narrow" type="number" min="0" value="${x.u}" oninput="state.items[${i}].u=this.value;renderNewPreserve()"></td><td>${money((+x.q||0)*(+x.u||0))}</td><td><button class="remove" onclick="state.items.splice(${i},1);render()">×</button></td></tr>`).join('')}</table></div><button class="ghost" style="margin-top:10px" onclick="state.items.push({p:'',q:1,u:0});render()">＋ Add Item</button></div></section><aside class="card"><div class="field"><label>Payment Mode</label><select onchange="state.payment=this.value"><option ${state.payment==='Cash'?'selected':''}>Cash</option><option ${state.payment==='UPI'?'selected':''}>UPI</option><option ${state.payment==='Balance'?'selected':''}>Balance</option></select></div><div class="field" style="margin-top:12px"><label>Discount</label><div style="display:grid;grid-template-columns:1fr 92px;gap:7px"><input type="number" min="0" value="${state.discount}" oninput="state.discount=this.value;renderNewPreserve()"><select onchange="state.discountType=this.value;renderNewPreserve()"><option value="amount" ${state.discountType==='amount'?'selected':''}>Amount</option><option value="percent" ${state.discountType==='percent'?'selected':''}>%</option></select></div></div><div class="totals"><div class="totalbox"><div class="totalrow"><span>Subtotal</span><b>${money(sum)}</b></div><div class="totalrow"><span>Discount</span><b>-${money(disc)}</b></div>${state.settings.taxRate?`<div class="totalrow"><span>${state.settings.taxLabel} (${state.settings.taxRate}%)</span><b>${money(tax)}</b></div>`:''}<div class="totalrow grand"><span>Grand Total</span><b>${money(grand)}</b></div><div class="word">Amount in words: <b>${words(grand)}</b></div></div></div><div class="section muted" style="font-size:12px">Date/time will be recorded automatically. Created by: <b>${state.user}</b></div></aside></div>`}
+function newBill(){
+  let sum = state.items.reduce(
+    (s,x) => s + (+x.q || 0) * (+x.u || 0),
+    0
+  );
+
+  let discount = +state.discount || 0;
+
+  let disc = state.discountType === 'percent'
+    ? sum * discount / 100
+    : discount;
+
+  let after = Math.max(0, sum - disc);
+
+  let tax = state.settings.taxRate
+    ? after * state.settings.taxRate / 100
+    : 0;
+
+  let grand = after + tax;
+
+  return `
+    <div class="pagehead">
+      <div>
+        <h2>New Bill</h2>
+        <div class="muted">
+          Bill No. <b>${billNo()}</b> · automatically generated
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" onclick="resetBill()">
+          Clear
+        </button>
+
+        <button class="primary" onclick="saveBill()">
+          Save & Print
+        </button>
+      </div>
+    </div>
+
+    <div class="billbox">
+
+      <section class="card">
+
+        <div class="formgrid">
+
+          <div class="field">
+            <label>Customer Name</label>
+
+            <input
+              id="cn"
+              value="${state.customer.name}"
+              placeholder="Optional"
+            >
+          </div>
+
+          <div class="field">
+            <label>Phone</label>
+
+            <input
+              id="cp"
+              value="${state.customer.phone}"
+              placeholder="Optional"
+            >
+          </div>
+
+          <div
+            class="field"
+            style="grid-column:1/-1"
+          >
+            <label>Address</label>
+
+            <input
+              id="ca"
+              value="${state.customer.address}"
+              placeholder="Optional"
+            >
+          </div>
+
+        </div>
+
+
+        <div class="items">
+
+          <div class="tablewrap">
+
+            <table class="table">
+
+              <tr>
+                <th>S.No.</th>
+                <th>Particular</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+
+              ${state.items.map((x,i) => `
+
+                <tr>
+
+                  <td>
+                    ${i + 1}
+                  </td>
+
+
+                  <td>
+
+                    <input
+                      value="${x.p}"
+                      oninput="
+                        state.items[${i}].p = this.value;
+                      "
+                    >
+
+                  </td>
+
+
+                  <td>
+
+                    <input
+                      class="narrow"
+                      type="number"
+                      min="0"
+                      value="${x.q}"
+                      oninput="
+                        state.items[${i}].q = this.value;
+                        refreshBillCalculations();
+                      "
+                    >
+
+                  </td>
+
+
+                  <td>
+
+                    <input
+                      class="narrow"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value="${x.u}"
+                      oninput="
+                        state.items[${i}].u = this.value;
+                        refreshBillCalculations();
+                      "
+                    >
+
+                  </td>
+
+
+                  <td class="item-total">
+                    ${money((+x.q || 0) * (+x.u || 0))}
+                  </td>
+
+
+                  <td>
+
+                    <button
+                      class="remove"
+                      onclick="
+                        state.items.splice(${i},1);
+                        render();
+                      "
+                    >
+                      ×
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              `).join('')}
+
+            </table>
+
+          </div>
+
+
+          <button
+            class="ghost"
+            style="margin-top:10px"
+            onclick="
+              state.items.push({
+                p:'',
+                q:1,
+                u:0
+              });
+              render();
+            "
+          >
+            ＋ Add Item
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <aside class="card">
+
+        <div class="field">
+
+          <label>Payment Mode</label>
+
+          <select
+            onchange="
+              state.payment = this.value;
+            "
+          >
+
+            <option
+              ${state.payment === 'Cash' ? 'selected' : ''}
+            >
+              Cash
+            </option>
+
+            <option
+              ${state.payment === 'UPI' ? 'selected' : ''}
+            >
+              UPI
+            </option>
+
+            <option
+              ${state.payment === 'Balance' ? 'selected' : ''}
+            >
+              Balance
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>Discount</label>
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:1fr 92px;
+              gap:7px
+            "
+          >
+
+            <input
+              id="discountInput"
+              type="number"
+              min="0"
+              step="0.01"
+              value="${state.discount}"
+              oninput="
+                state.discount = this.value;
+                refreshBillCalculations();
+              "
+            >
+
+
+            <select
+              id="discountType"
+              onchange="
+                state.discountType = this.value;
+                refreshBillCalculations();
+              "
+            >
+
+              <option
+                value="amount"
+                ${state.discountType === 'amount' ? 'selected' : ''}
+              >
+                Amount
+              </option>
+
+              <option
+                value="percent"
+                ${state.discountType === 'percent' ? 'selected' : ''}
+              >
+                %
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="totals">
+
+          <div class="totalbox">
+
+            <div class="totalrow">
+
+              <span>
+                Subtotal
+              </span>
+
+              <b id="bill-subtotal">
+                ${money(sum)}
+              </b>
+
+            </div>
+
+
+            <div class="totalrow">
+
+              <span>
+                Discount
+              </span>
+
+              <b id="bill-discount">
+                -${money(disc)}
+              </b>
+
+            </div>
+
+
+            ${
+              state.settings.taxRate
+              ?
+              `
+                <div class="totalrow">
+
+                  <span>
+                    ${state.settings.taxLabel}
+                    (${state.settings.taxRate}%)
+                  </span>
+
+                  <b id="bill-tax">
+                    ${money(tax)}
+                  </b>
+
+                </div>
+              `
+              :
+              ''
+            }
+
+
+            <div class="totalrow grand">
+
+              <span>
+                Grand Total
+              </span>
+
+              <b id="bill-grand">
+                ${money(grand)}
+              </b>
+
+            </div>
+
+
+            <div class="word">
+
+              Amount in words:
+
+              <b id="bill-words">
+                ${words(grand)}
+              </b>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="section muted"
+          style="font-size:12px"
+        >
+
+          Date/time will be recorded automatically.
+
+          Created by:
+
+          <b>${state.user}</b>
+
+        </div>
+
+      </aside>
+
+    </div>
+  `;
+}
+
+
+function refreshBillCalculations(){
+
+  let sum = state.items.reduce(
+    (s,x) =>
+      s + (+x.q || 0) * (+x.u || 0),
+    0
+  );
+
+
+  let discount = +state.discount || 0;
+
+
+  let disc =
+    state.discountType === 'percent'
+      ? sum * discount / 100
+      : discount;
+
+
+  let after =
+    Math.max(0, sum - disc);
+
+
+  let tax =
+    state.settings.taxRate
+      ? after * state.settings.taxRate / 100
+      : 0;
+
+
+  let grand =
+    after + tax;
+
+
+  /*
+   * IMPORTANT:
+   * Do NOT call render() here.
+   *
+   * Updating the DOM directly keeps
+   * the cursor inside the input field.
+   */
+
+
+  document
+    .querySelectorAll('.item-total')
+    .forEach((el,i) => {
+
+      let x = state.items[i];
+
+      if(x){
+
+        el.textContent =
+          money(
+            (+x.q || 0) *
+            (+x.u || 0)
+          );
+
+      }
+
+    });
+
+
+  let subtotal =
+    document.querySelector('#bill-subtotal');
+
+  let discountEl =
+    document.querySelector('#bill-discount');
+
+  let taxEl =
+    document.querySelector('#bill-tax');
+
+  let grandEl =
+    document.querySelector('#bill-grand');
+
+  let wordsEl =
+    document.querySelector('#bill-words');
+
+
+  if(subtotal){
+
+    subtotal.textContent =
+      money(sum);
+
+  }
+
+
+  if(discountEl){
+
+    discountEl.textContent =
+      '-' + money(disc);
+
+  }
+
+
+  if(taxEl){
+
+    taxEl.textContent =
+      money(tax);
+
+  }
+
+
+  if(grandEl){
+
+    grandEl.textContent =
+      money(grand);
+
+  }
+
+
+  if(wordsEl){
+
+    wordsEl.textContent =
+      words(grand);
+
+  }
+
+}
 function renderNewPreserve(){let cn=document.querySelector('#cn')?.value||'',cp=document.querySelector('#cp')?.value||'',ca=document.querySelector('#ca')?.value||'';state.customer={name:cn,phone:cp,address:ca};render();}
 function bills(){return `<div class="pagehead"><div><h2>Bill History</h2><div class="muted">Search by bill number or customer</div></div></div><div class="card"><div class="formgrid"><div class="field"><label>Search</label><input id="search" placeholder="Bill no. or customer" oninput="filterBills()"></div><div class="field"><label>Date</label><input id="billdate" type="date" onchange="filterBills()"></div><div class="field"><label>Payment</label><select onchange="filterBills()"><option>All</option><option>Cash</option><option>UPI</option><option>Balance</option></select></div></div><div id="billtable" style="margin-top:15px">${billTable(state.bills)}</div></div>`}
 function billTable(bs){return `<div class="tablewrap"><table class="table"><tr><th>Bill No.</th><th>Date</th><th>Customer</th><th>Total</th><th>Payment</th><th>Created By</th><th></th></tr>${bs.map(b=>`<tr><td><b>${b.id}</b></td><td>${b.date}</td><td>${b.customer||'Walk-in'}</td><td>${money(billGrand(b))}</td><td><span class="badge">${b.payment}</span></td><td>${b.user}</td><td><button class="ghost" onclick="printBill('${b.id}')">Print</button></td></tr>`).join('')}</table></div>`}
