@@ -467,89 +467,93 @@ function saveBill(bill) {
    SEARCH BILL HISTORY
    ========================================================= */
 
-function searchBills(search) {
+function searchBills(data) {
 
-  search =
-    search ||
-    {};
+  const search = data.search || data;
 
+  const ss = SpreadsheetApp.openById(SHEET_ID);
 
-  const ss =
-    SpreadsheetApp.openById(
-      SHEET_ID
-    );
-
-
-  /*
-   * Supported modes:
-   *
-   * date
-   * range
-   * today
-   */
-
-  const mode =
-    String(
-      search.mode ||
-      'date'
-    );
-
+  const mode = search.mode || 'date';
 
   const query =
-    String(
-      search.query ||
-      search.customer ||
-      ''
-    )
+    String(search.query || '')
       .trim()
       .toLowerCase();
 
-
-  const billQuery =
-    String(
-      search.billNo ||
-      ''
-    )
+  const billNoQuery =
+    String(search.billNo || '')
       .trim()
       .toLowerCase();
-
 
   const payment =
-    String(
-      search.payment ||
-      search.paymentMode ||
-      'All'
-    );
+    String(search.payment || 'All');
 
+  let startDate = null;
+  let endDate = null;
 
-  let startDate;
-  let endDate;
+  if (mode === 'date') {
 
-
-  /* TODAY */
-
-  if (mode === 'today') {
-
-    const now =
-      new Date();
-
+    if (!search.date) {
+      return jsonResponse({
+        success:false,
+        error:'Date is required'
+      });
+    }
 
     startDate =
-      new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
-      );
-
+      parseInputDate(search.date);
 
     endDate =
-      new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
-      );
+      new Date(startDate);
+
+  } else {
+
+    if (
+      !search.fromDate ||
+      !search.toDate
+    ) {
+
+      return jsonResponse({
+        success:false,
+        error:'Both from and to dates are required'
+      });
+
+    }
+
+    startDate =
+      parseInputDate(search.fromDate);
+
+    endDate =
+      parseInputDate(search.toDate);
 
   }
+
+  if (
+    !startDate ||
+    !endDate ||
+    isNaN(startDate.getTime()) ||
+    isNaN(endDate.getTime())
+  ) {
+
+    return jsonResponse({
+      success:false,
+      error:'Invalid search date'
+    });
+
+  }
+
+  startDate.setHours(
+    0,0,0,0
+  );
+
+  endDate.setHours(
+    23,59,59,999
+  );
+
+  // Continue with the rest of your existing
+  // searchBills() code from:
+  //
+  // const sheets = ss.getSheets()...
 
 
   /* PARTICULAR DATE */
