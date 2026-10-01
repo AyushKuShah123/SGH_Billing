@@ -1,51 +1,5080 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
 <title>Shivam Gift House — Billing</title>
+
 <style>
-:root{color-scheme:dark;--bg:#10141b;--surface:#171c24;--surface2:#202733;--text:#f4f7fb;--muted:#a8b0bf;--border:#303846;--accent:#8b7cff;--accent2:#2b2550;--danger:#d64545;}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}#app{min-height:100vh;background:var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer;transition:transform .08s ease,box-shadow .08s ease,background .15s ease,border-color .15s ease}button:not(:disabled):active{transform:translateY(1px) scale(.98);box-shadow:inset 0 2px 5px rgba(0,0,0,.28)}button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.nav button:active,.ghost:active,.primary:active,.danger:active{filter:brightness(.9)}button:disabled{opacity:.6;cursor:not-allowed}.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:max(12px,env(safe-area-inset-top)) 18px 12px}.topin{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:11px}.logo{width:40px;height:40px;border-radius:12px;background:var(--accent);color:white;display:grid;place-items:center;font-weight:900}.brand h1{font-size:16px;margin:0}.brand small{color:var(--muted)}.nav{display:flex;gap:6px;flex-wrap:wrap}.nav button,.ghost{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:9px 12px;border-radius:10px}.nav button.active{background:var(--accent2);color:var(--accent);border-color:transparent;font-weight:700}.main{max-width:1180px;margin:auto;padding:22px 18px 40px}.pagehead{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:18px}.pagehead h2{margin:0 0 5px;font-size:26px}.muted{color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;padding:11px 15px;border-radius:10px;font-weight:750}.danger{border:0;background:var(--danger);color:white;padding:9px 12px;border-radius:9px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px;box-shadow:0 6px 22px rgba(20,30,50,.04)}.metric{font-size:25px;font-weight:800;margin-top:7px}.label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}.section{margin-top:18px}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:13px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{padding:11px 12px;border-bottom:1px solid var(--border);text-align:left}.table th{font-size:12px;color:var(--muted);background:var(--surface2)}.table tr:last-child td{border-bottom:0}.badge{display:inline-flex;padding:4px 8px;border-radius:99px;background:var(--accent2);color:var(--accent);font-size:12px;font-weight:700}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 11px;outline:none}.field textarea{min-height:72px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}.billbox{display:grid;grid-template-columns:1.35fr .65fr;gap:16px}.items{margin-top:14px}.items table{min-width:720px}.items input{width:100%;border:0;background:transparent;color:var(--text);outline:none;padding:4px}.items .narrow{width:90px}.remove{border:0;background:transparent;color:var(--danger);font-size:18px}.totals{display:flex;justify-content:flex-end;margin-top:15px}.totalbox{width:min(100%,380px);background:var(--surface2);border:1px solid var(--border);border-radius:13px;padding:15px}.totalrow{display:flex;justify-content:space-between;padding:6px 0}.grand{font-size:21px;font-weight:850;border-top:1px solid var(--border);margin-top:7px;padding-top:12px}.word{color:var(--muted);font-size:13px;margin-top:8px}.empty{padding:30px;text-align:center;color:var(--muted)}.settings{display:grid;grid-template-columns:1fr 1fr;gap:15px}.hide{display:none!important}.toast{position:fixed;right:18px;bottom:18px;background:var(--text);color:var(--bg);padding:12px 15px;border-radius:10px;z-index:99;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.billbox,.settings{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr 1fr}.pagehead{flex-direction:column}.nav{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}.nav button{white-space:nowrap}.topin{align-items:flex-start;flex-direction:column}.top{position:relative}}
-@media(max-width:560px){.main{padding:16px 12px 30px}.grid{grid-template-columns:1fr 1fr;gap:9px}.card{padding:13px}.metric{font-size:20px}.formgrid{grid-template-columns:1fr}.actions{width:100%}.actions>*{flex:1}.brand h1{font-size:15px}.logo{width:36px;height:36px}.pagehead h2{font-size:23px}}
-@media print{body{background:white;color:#111}.top,.no-print{display:none!important}.main{padding:0;max-width:none}.card{box-shadow:none;border:0}.printbill{display:block!important}.screenbill{display:none!important}}
-</style></head>
-<body><div id="app"></div>
+:root{
+  color-scheme:dark;
+  --bg:#10141b;
+  --surface:#171c24;
+  --surface2:#202733;
+  --text:#f4f7fb;
+  --muted:#a8b0bf;
+  --border:#303846;
+  --accent:#8b7cff;
+  --accent2:#2b2550;
+  --danger:#d64545;
+  --success:#27ae60;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
+  "Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+body{
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+
+#app{
+  min-height:100vh;
+  background:var(--bg);
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  transition:
+    transform .08s ease,
+    box-shadow .08s ease,
+    background .15s ease,
+    border-color .15s ease,
+    filter .15s ease;
+}
+
+button:not(:disabled):active{
+  transform:translateY(2px) scale(.97);
+  box-shadow:inset 0 3px 7px rgba(0,0,0,.35);
+  filter:brightness(.88);
+}
+
+button:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:color-mix(in srgb,var(--surface) 94%,transparent);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:max(12px,env(safe-area-inset-top)) 18px 12px;
+}
+
+.topin{
+  max-width:1180px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:var(--accent);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+.brand h1{
+  font-size:16px;
+  margin:0;
+}
+
+.brand small{
+  color:var(--muted);
+}
+
+.nav{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.nav button,
+.ghost{
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  padding:9px 12px;
+  border-radius:10px;
+}
+
+.nav button:hover,
+.ghost:hover{
+  border-color:var(--accent);
+}
+
+.nav button.active{
+  background:var(--accent2);
+  color:var(--accent);
+  border-color:var(--accent);
+  font-weight:700;
+}
+
+.main{
+  max-width:1180px;
+  margin:auto;
+  padding:22px 18px 40px;
+}
+
+.pagehead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.pagehead h2{
+  margin:0 0 5px;
+  font-size:26px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.primary{
+  border:0;
+  background:var(--accent);
+  color:white;
+  padding:11px 15px;
+  border-radius:10px;
+  font-weight:750;
+}
+
+.primary:hover{
+  filter:brightness(1.08);
+}
+
+.danger{
+  border:0;
+  background:var(--danger);
+  color:white;
+  padding:9px 12px;
+  border-radius:9px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:13px;
+}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:16px;
+  box-shadow:0 6px 22px rgba(20,30,50,.04);
+}
+
+.metric{
+  font-size:25px;
+  font-weight:800;
+  margin-top:7px;
+}
+
+.label{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.section{
+  margin-top:18px;
+}
+
+.tablewrap{
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:13px;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:760px;
+}
+
+.table th,
+.table td{
+  padding:11px 12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+
+.table th{
+  font-size:12px;
+  color:var(--muted);
+  background:var(--surface2);
+}
+
+.table tr:last-child td{
+  border-bottom:0;
+}
+
+.table tr:hover td{
+  background:color-mix(in srgb,var(--surface2) 55%,transparent);
+}
+
+.badge{
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:99px;
+  background:var(--accent2);
+  color:var(--accent);
+  font-size:12px;
+  font-weight:700;
+}
+
+.formgrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:10px;
+  padding:10px 11px;
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 18%,transparent);
+}
+
+.field textarea{
+  min-height:72px;
+  resize:vertical;
+}
+
+.billbox{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:16px;
+}
+
+.items{
+  margin-top:14px;
+}
+
+.items table{
+  min-width:720px;
+}
+
+.items input{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--text);
+  outline:none;
+  padding:4px;
+}
+
+.items .narrow{
+  width:90px;
+}
+
+.remove{
+  border:0;
+  background:transparent;
+  color:var(--danger);
+  font-size:20px;
+  border-radius:7px;
+}
+
+.remove:hover{
+  background:rgba(214,69,69,.12);
+}
+
+.totals{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:15px;
+}
+
+.totalbox{
+  width:min(100%,380px);
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:15px;
+}
+
+.totalrow{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+}
+
+.grand{
+  font-size:21px;
+  font-weight:850;
+  border-top:1px solid var(--border);
+  margin-top:7px;
+  padding-top:12px;
+}
+
+.word{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:8px;
+}
+
+.empty{
+  padding:30px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.settings{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.hide{
+  display:none!important;
+}
+
+.toast{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:var(--text);
+  color:var(--bg);
+  padding:12px 15px;
+  border-radius:10px;
+  z-index:99;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  max-width:min(450px,calc(100vw - 36px));
+}
+
+.loading{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:30px;
+  color:var(--muted);
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent);
+  animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+  from{opacity:.3;transform:scale(.8)}
+  to{opacity:1;transform:scale(1.2)}
+}
+
+@media(max-width:850px){
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .billbox,
+  .settings{
+    grid-template-columns:1fr;
+  }
+
+  .formgrid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .pagehead{
+    flex-direction:column;
+  }
+
+  .nav{
+    overflow:auto;
+    flex-wrap:nowrap;
+    padding-bottom:2px;
+  }
+
+  .nav button{
+    white-space:nowrap;
+  }
+
+  .topin{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .top{
+    position:relative;
+  }
+}
+
+@media(max-width:560px){
+
+  .main{
+    padding:16px 12px 30px;
+  }
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+  }
+
+  .card{
+    padding:13px;
+  }
+
+  .metric{
+    font-size:20px;
+  }
+
+  .formgrid{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    width:100%;
+  }
+
+  .actions>*{
+    flex:1;
+  }
+
+  .brand h1{
+    font-size:15px;
+  }
+
+  .logo{
+    width:36px;
+    height:36px;
+  }
+
+  .pagehead h2{
+    font-size:23px;
+  }
+}
+
+@media print{
+
+  body{
+    background:white;
+    color:#111;
+  }
+
+  .top,
+  .no-print{
+    display:none!important;
+  }
+
+  .main{
+    padding:0;
+    max-width:none;
+  }
+
+  .card{
+    box-shadow:none;
+    border:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app"></div>
+
 <script>
-const API_URL='/api/save-bill';
-const USERS={admin:{password:'admin123',role:'ADMIN',name:'Admin'},cashier:{password:'cashier123',role:'USER',name:'Billing User'}};
-const SESSION_KEY='sghBillingSession'; const SESSION_DAYS=01; const state={view:'dashboard',loggedIn:false,role:'',user:'',currency:'NPR',theme:'dark',settings:{name:'Shivam Gift House',gstLabel:'PAN Number',gst:'08XXXXXXXX00',mobile:'',address:'Bardaghat--4, NawalParasi',taxLabel:'Tax Rate',taxRate:0,gstRates:false,accent:'#8b7cff'},bills:[],items:[{p:'',q:1,u:0}],customer:{name:'',phone:'',address:''},payment:'',discountType:'amount',discount:0,history:{mode:'date',date:'',from:'',to:'',query:'',billNo:'',payment:'All',results:null,loading:false}};
-const seed=[];
-state.bills=seed.map(x=>({id:x[0],date:x[1],customer:x[2],items:[{p:x[3],q:x[4],u:x[5]}],payment:x[6],user:x[7]}));
-function money(n){return new Intl.NumberFormat(state.currency==='NPR'?'en-NP':'en-IN',{style:'currency',currency:state.currency,maximumFractionDigits:2}).format(n||0)}
-function total(b){return b.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0)}
-function billGrand(b){let s=total(b),d=b.discountType==='percent'?s*(b.discount||0)/100:(b.discount||0),a=Math.max(0,s-d);return a+a*(b.taxRate||0)/100}
-function words(n){n=Math.round(n);if(!n)return 'Zero Only';let a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];function two(x){return x<20?a[x]:b[Math.floor(x/10)]+(x%10?' '+a[x%10]:'')}function f(x){if(x<100)return two(x);if(x<1000)return a[Math.floor(x/100)]+' Hundred'+(x%100?' '+two(x%100):'');if(x<100000)return f(Math.floor(x/1000))+' Thousand'+(x%1000?' '+f(x%1000):'');if(x<10000000)return f(Math.floor(x/100000))+' Lakh'+(x%100000?' '+f(x%100000):'');return f(Math.floor(x/10000000))+' Crore'+(x%10000000?' '+f(x%10000000):'')}return f(n)+' Only'}
-function billNo(){let d=new Date(),yy=String(d.getFullYear()).slice(-2),day=String(d.getDate()).padStart(2,'0'),m=String.fromCharCode(65+d.getMonth()),prefix=`SGH-${yy}${day}${m}`;let nums=state.bills.filter(b=>b.id.startsWith(prefix)).map(b=>+b.id.slice(-4)||0);return prefix+String((Math.max(0,...nums)+1)).padStart(4,'0')}
-function loginScreen(){let app=document.querySelector('#app');app.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;padding:20px"><section class="card" style="width:min(420px,100%);padding:26px"><div style="text-align:center;margin-bottom:22px"><div class="logo" style="margin:0 auto 12px">SG</div><h1 style="margin:0">${state.settings.name}</h1><div class="muted" style="margin-top:5px">Billing System</div></div><div class="field"><label>Username</label><input id="loginUser" autocomplete="username" placeholder="Username"></div><div class="field" style="margin-top:12px"><label>Password</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"></div><button class="primary" style="width:100%;margin-top:16px" onclick="login()">Login</button><div class="muted" style="font-size:12px;margin-top:14px;text-align:center">Admin and billing-user access are role based.</div></section></main>`}
-function login(){let u=(document.querySelector('#loginUser')?.value||'').trim().toLowerCase(),p=document.querySelector('#loginPass')?.value||'',account=USERS[u];if(!account||account.password!==p){toast('Invalid username or password');return}state.loggedIn=true;state.role=account.role;state.user=account.name;state.view='dashboard';localStorage.setItem(SESSION_KEY,JSON.stringify({username:u,role:account.role,name:account.name,expiresAt:Date.now()+SESSION_DAYS*24*60*60*1000}));render()}
-function logout(){state.loggedIn=false;state.role='';state.user='';state.view='dashboard';localStorage.removeItem(SESSION_KEY);render()}
-function restoreSession(){try{const raw=localStorage.getItem(SESSION_KEY);if(!raw)return;const s=JSON.parse(raw);if(!s.expiresAt||Date.now()>=s.expiresAt){localStorage.removeItem(SESSION_KEY);return}const account=USERS[s.username];if(!account||account.role!==s.role){localStorage.removeItem(SESSION_KEY);return}state.loggedIn=true;state.role=account.role;state.user=account.name}catch(e){localStorage.removeItem(SESSION_KEY)}}
-function render(){let app=document.querySelector('#app');document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.colorScheme=state.theme;if(state.theme==='light'){document.documentElement.style.setProperty('--bg','#f4f7fb');document.documentElement.style.setProperty('--surface','#ffffff');document.documentElement.style.setProperty('--surface2','#f8fafc');document.documentElement.style.setProperty('--text','#172033');document.documentElement.style.setProperty('--muted','#667085');document.documentElement.style.setProperty('--border','#e4e8ef');document.documentElement.style.setProperty('--accent2','#ebe8ff')}else{document.documentElement.style.setProperty('--bg','#10141b');document.documentElement.style.setProperty('--surface','#171c24');document.documentElement.style.setProperty('--surface2','#202733');document.documentElement.style.setProperty('--text','#f4f7fb');document.documentElement.style.setProperty('--muted','#a8b0bf');document.documentElement.style.setProperty('--border','#303846');document.documentElement.style.setProperty('--accent2','#2b2550')}if(!state.loggedIn){loginScreen();return}let nav=['dashboard','new','bills','outstanding'];if(state.role==='ADMIN')nav.push('settings');app.innerHTML=`<header class="top"><div class="topin"><div class="brand"><div class="logo">SG</div><div><h1>${state.settings.name}</h1><small>${state.role==='ADMIN'?'Administrator':'Billing User'} · ${state.user}</small></div></div><nav class="nav">${nav.map(v=>`<button class="${state.view===v?'active':''}" onclick="go('${v}')">${({dashboard:'Dashboard',new:'New Bill',bills:'Bills',outstanding:'Outstanding',settings:'Admin'})[v]}</button>`).join('')}<button onclick="toggleTheme()">${state.theme==='dark'?'☀ Light':'☾ Dark'}</button><button onclick="logout()">Logout</button></nav></div></header><main class="main">${state.view==='dashboard'?dashboard():state.view==='new'?newBill():state.view==='bills'?bills():state.view==='outstanding'?outstanding():settings()}</main><div id="toast"></div>`}
-function dashboard(){let today=state.bills.filter(b=>b.date==='01 Oct 2026'),sales=today.reduce((s,b)=>s+total(b),0),cash=today.filter(b=>b.payment==='Cash').reduce((s,b)=>s+total(b),0),upi=today.filter(b=>b.payment==='UPI').reduce((s,b)=>s+total(b),0),bal=today.filter(b=>b.payment==='Balance').reduce((s,b)=>s+total(b),0);return `<div class="pagehead"><div><h2>Dashboard</h2><div class="muted">Today’s billing overview</div></div><button class="primary" onclick="go('new')">＋ New Bill</button></div><div class="grid"><div class="card"><div class="label">Today's Bills</div><div class="metric">${today.length}</div></div><div class="card"><div class="label">Today's Sales</div><div class="metric">${money(sales)}</div></div><div class="card"><div class="label">Cash + UPI</div><div class="metric">${money(cash+upi)}</div></div><div class="card"><div class="label">Outstanding</div><div class="metric">${money(bal)}</div></div></div><div class="section card"><div class="pagehead"><div><h3 style="margin:0">Today's Outstanding</h3><small class="muted">Unpaid bills created today</small></div><button class="ghost" onclick="go('outstanding')">View all</button></div>${today.filter(b=>b.payment==='Balance').length?`<div class="tablewrap"><table class="table"><tr><th>Bill No.</th><th>Customer</th><th>Amount</th><th>Created By</th></tr>${today.filter(b=>b.payment==='Balance').map(b=>`<tr><td>${b.id}</td><td>${b.customer||'Walk-in'}</td><td>${money(total(b))}</td><td>${b.user}</td></tr>`).join('')}</table></div>`:'<div class="empty">No outstanding bills today.</div>'}</div>`}
-function newBill(){let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;return `<div class="pagehead"><div><h2>New Bill</h2><div class="muted">Bill No. <b>${billNo()}</b> · automatically generated</div></div><div class="actions"><button class="ghost" onclick="resetBill()">Clear</button><button class="primary" onclick="saveBill()">Save & Print</button></div></div><div class="billbox"><section class="card"><div class="formgrid"><div class="field"><label>Customer Name</label><input id="cn" value="${state.customer.name}" placeholder="Optional"></div><div class="field"><label>Phone</label><input id="cp" value="${state.customer.phone}" placeholder="Optional"></div><div class="field" style="grid-column:1/-1"><label>Address</label><input id="ca" value="${state.customer.address}" placeholder="Optional"></div></div><div class="items"><div class="tablewrap"><table class="table"><tr><th>S.No.</th><th>Particular</th><th>Quantity</th><th>Unit Price</th><th>Total</th><th></th></tr>${state.items.map((x,i)=>`<tr><td>${i+1}</td><td><input value="${x.p}" oninput="state.items[${i}].p=this.value"></td><td><input class="narrow" type="number" min="0" value="${x.q}" oninput="state.items[${i}].q=this.value;refreshBillCalculations()"></td><td><input class="narrow" type="number" min="0" value="${x.u}" oninput="state.items[${i}].u=this.value;refreshBillCalculations()"></td><td class="item-total">${money((+x.q||0)*(+x.u||0))}</td><td><button class="remove" onclick="state.items.splice(${i},1);render()">×</button></td></tr>`).join('')}</table></div><button class="ghost" style="margin-top:10px" onclick="state.items.push({p:'',q:1,u:0});render()">＋ Add Item</button></div></section><aside class="card"><div class="field"><label>Payment Mode <span style="color:var(--danger)">*</span></label><select id="paymentMode" required onchange="state.payment=this.value"><option value="" ${state.payment===''?'selected':''}>Select payment mode</option><option value="Cash" ${state.payment==='Cash'?'selected':''}>Cash</option><option value="UPI" ${state.payment==='UPI'?'selected':''}>UPI</option><option value="Balance" ${state.payment==='Balance'?'selected':''}>Balance</option></select></div><div class="field" style="margin-top:12px"><label>Discount</label><div style="display:grid;grid-template-columns:1fr 92px;gap:7px"><input type="number" min="0" value="${state.discount}" oninput="state.discount=this.value;refreshBillCalculations()"><select onchange="state.discountType=this.value;refreshBillCalculations()"><option value="amount" ${state.discountType==='amount'?'selected':''}>Amount</option><option value="percent" ${state.discountType==='percent'?'selected':''}>%</option></select></div></div><div class="totals"><div class="totalbox"><div class="totalrow"><span>Subtotal</span><b id="bill-subtotal">${money(sum)}</b></div><div class="totalrow"><span>Discount</span><b id="bill-discount">-${money(disc)}</b></div>${state.settings.taxRate?`<div class="totalrow"><span>${state.settings.taxLabel} (${state.settings.taxRate}%)</span><b id="bill-tax">${money(tax)}</b></div>`:''}<div class="totalrow grand"><span>Grand Total</span><b id="bill-grand">${money(grand)}</b></div><div class="word">Amount in words: <b id="bill-words">${words(grand)}</b></div></div></div><div class="section muted" style="font-size:12px">Date/time will be recorded automatically. Created by: <b>${state.user}</b></div></aside></div>`}
-function refreshBillCalculations(){let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;document.querySelectorAll('.item-total').forEach((el,i)=>{let x=state.items[i];if(x)el.textContent=money((+x.q||0)*(+x.u||0))});let s=document.querySelector('#bill-subtotal'),d=document.querySelector('#bill-discount'),t=document.querySelector('#bill-tax'),g=document.querySelector('#bill-grand'),w=document.querySelector('#bill-words');if(s)s.textContent=money(sum);if(d)d.textContent='-'+money(disc);if(t)t.textContent=money(tax);if(g)g.textContent=money(grand);if(w)w.textContent=words(grand)}
-function renderNewPreserve(){let cn=document.querySelector('#cn')?.value||'',cp=document.querySelector('#cp')?.value||'',ca=document.querySelector('#ca')?.value||'';state.customer={name:cn,phone:cp,address:ca};refreshBillCalculations();}
-function bills(){let h=state.history;setTimeout(loadTodayBills,0);return `<div class="pagehead"><div><h2>Bill History</h2><div class="muted">Search bills directly from Data Base</div></div></div><div class="card" style="margin-bottom:15px"><div class="pagehead" style="margin-bottom:12px"><div><h3 style="margin:0">Today's Overview</h3><div class="muted" id="todayBillCount">${state.todayLoading?'Loading Bill...':(state.todayBills?.length||0)+' bill'+((state.todayBills?.length||0)===1?'':'s')+' prepared today'}</div></div><button class="ghost" onclick="loadTodayBills()">↻ Refresh</button></div><div id="todayBillTable">${todayOverviewTable(state.todayBills||[])}</div></div><div class="card"><div class="formgrid"><div class="field"><label>Search Type</label><select id="searchMode" onchange="setHistoryMode(this.value)"><option value="date" ${h.mode==='date'?'selected':''}>Particular Date</option><option value="range" ${h.mode==='range'?'selected':''}>Between Two Dates</option></select></div>${h.mode==='date'?`<div class="field"><label>Date</label><input id="historyDate" type="date" value="${h.date||localToday()}"></div>`:`<div class="field"><label>From Date</label><input id="historyFrom" type="date" value="${h.from||localToday()}"></div><div class="field"><label>To Date</label><input id="historyTo" type="date" value="${h.to||localToday()}"></div>`}<div class="field"><label>Customer Name (optional)</label><input id="historyQuery" value="${h.query||''}" placeholder="Customer name"></div><div class="field"><label>Bill Number (optional)</label><input id="historyBillNo" value="${h.billNo||''}" placeholder="SGH-..."></div><div class="field"><label>Payment</label><select id="historyPayment"><option value="All" ${h.payment==='All'?'selected':''}>All</option><option value="Cash" ${h.payment==='Cash'?'selected':''}>Cash</option><option value="UPI" ${h.payment==='UPI'?'selected':''}>UPI</option><option value="Balance" ${h.payment==='Balance'?'selected':''}>Balance</option></select></div></div><div class="actions" style="margin-top:14px"><button class="primary" id="historySearchBtn" onclick="searchBillHistory()">🔎 Search </button><button class="ghost" onclick="clearBillHistorySearch()">Clear</button></div><div id="billtable" style="margin-top:15px">${h.results===null?'<div class="empty">Choose a date or date range, then click Search.</div>':billTable(h.results)}</div></div>`}
-function setHistoryMode(mode){state.history.mode=mode;state.history.results=null;render()}
-function clearBillHistorySearch(){state.history={mode:'date',date:localToday(),from:'',to:'',query:'',billNo:'',payment:'All',results:null,loading:false};render()}
-function localToday(){return new Date().toISOString().slice(0,10)}
-function todayOverviewTable(bs){if(state.todayLoading)return '<div class="empty">Loading today\'s bills...</div>';if(!bs||!bs.length)return '<div class="empty">No bills prepared today.</div>';return `<div class="tablewrap"><table class="table"><tr><th>Customer Name</th><th>Bill Amount</th><th>Date</th><th>Time</th></tr>${bs.map(b=>`<tr><td>${b.customer||'Walk-in'}</td><td><b>${money(b.grandTotal!=null?b.grandTotal:billGrand(b))}</b></td><td>${b.date||''}</td><td>${b.time||''}</td></tr>`).join('')}</table></div>`}
-async function loadTodayBills(){state.todayLoading=true;let box=document.querySelector('#todayBillTable');if(box)box.innerHTML=todayOverviewTable([]);try{let response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'todayBills'})});let result=await response.json();if(!response.ok||!result.success)throw new Error(result.error||'Unable to load today bills');state.todayBills=result.bills||[];state.todayLoading=false;state.bills=mergeBills(state.bills,state.todayBills);let table=document.querySelector('#todayBillTable');if(table)table.innerHTML=todayOverviewTable(state.todayBills);let count=document.querySelector('#todayBillCount');if(count)count.textContent=state.todayBills.length+' bill'+(state.todayBills.length===1?'':'s')+' prepared today';}catch(e){state.todayLoading=false;let box2=document.querySelector('#todayBillTable');if(box2)box2.innerHTML='<div class="empty">Unable to load today bills: '+escapeHtml(e.message)+'</div>';let count=document.querySelector('#todayBillCount');if(count)count.textContent='Unable to load today bills';}}
-function mergeBills(existing,incoming){let map={};(existing||[]).forEach(b=>map[b.id||b.billNo]=b);(incoming||[]).forEach(b=>map[b.id||b.billNo]=b);return Object.values(map)}
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function billTable(bs){if(!bs||!bs.length)return '<div class="empty">No data found for the selected search.</div>';return `<div class="tablewrap"><table class="table"><tr><th>Bill No.</th><th>Date</th><th>Time</th><th>Customer</th><th>Total</th><th>Payment</th><th>Created By</th><th></th></tr>${bs.map(b=>`<tr><td><b>${b.id||b.billNo||''}</b></td><td>${b.date||''}</td><td>${b.time||''}</td><td>${b.customer||'Walk-in'}</td><td>${money(b.grandTotal!=null?b.grandTotal:billGrand(b))}</td><td><span class="badge">${b.payment||''}</span></td><td>${b.user||''}</td><td><button class="ghost" onclick="printBill('${b.id||b.billNo}')">Print</button></td></tr>`).join('')}</table></div>`}
-function outstanding(){let bs=state.bills.filter(b=>b.payment==='Balance');return `<div class="pagehead"><div><h2>Outstanding / Balance</h2><div class="muted">Unpaid bills and customer balances</div></div></div><div class="card"><div class="grid" style="margin-bottom:15px"><div><div class="label">Outstanding Bills</div><div class="metric">${bs.length}</div></div><div><div class="label">Outstanding Amount</div><div class="metric">${money(bs.reduce((s,b)=>s+total(b),0))}</div></div></div>${billTable(bs)}</div>`}
-function settings(){return `<div class="pagehead"><div><h2>Admin Settings</h2><div class="muted">Shop identity, tax, currency and appearance</div></div><button class="primary" onclick="saveSettings()">Save Settings</button></div><div class="settings"><section class="card"><h3 style="margin-top:0">Shop Details</h3><div class="field"><label>Billing App Name</label><input id="sn" value="${state.settings.name}"></div><div class="field" style="margin-top:12px"><label>Document Number Label</label><input id="gstlabel" value="${state.settings.gstLabel}" placeholder="GST Number, PAN Number, etc."></div><div class="field" style="margin-top:12px"><label>Document Number</label><input id="gst" value="${state.settings.gst}" placeholder="Enter number"></div><div class="field" style="margin-top:12px"><label>Mobile</label><input id="mob" value="${state.settings.mobile}"></div><div class="field" style="margin-top:12px"><label>Address</label><textarea id="addr">${state.settings.address}</textarea></div></section><section class="card"><h3 style="margin-top:0">Currency & Tax</h3><div class="field"><label>Currency</label><select id="cur"><option value="INR" ${state.currency==='INR'?'selected':''}>INR — Indian Rupee</option><option value="NPR" ${state.currency==='NPR'?'selected':''}>NPR — Nepali Rupee</option></select></div><div class="field" style="margin-top:12px"><label>Tax Label</label><input id="taxlabel" value="${state.settings.taxLabel}" placeholder="Tax Rate, VAT, GST, etc."></div><div class="field" style="margin-top:12px"><label>Tax Rate (%) — Admin only</label><input id="taxrate" type="number" min="0" max="100" step="0.01" value="${state.settings.taxRate}"></div><p class="muted" style="font-size:12px">Set 0 for no tax. The configured label and rate appear on bills; billing users cannot change the rate.</p><hr style="border:0;border-top:1px solid var(--border);margin:20px 0"><h3>Appearance</h3><div class="formgrid"><div class="field"><label>Theme</label><select id="theme"><option value="dark" ${state.theme==='dark'?'selected':''}>Dark</option><option value="light" ${state.theme==='light'?'selected':''}>Light</option></select></div><div class="field"><label>Theme Color</label><input id="accent" type="color" value="${state.settings.accent}"></div></div><p class="muted" style="font-size:12px">Default theme is dark. Admin controls the accent color.</p><hr style="border:0;border-top:1px solid var(--border);margin:20px 0"><h3>Users & Permissions</h3><p class="muted">Prototype roles: Admin and Billing User. Production version will use secure authentication and server-side role checks.</p></section></div>`}
-function saveSettings(){state.settings={...state.settings,name:document.querySelector('#sn').value,gstLabel:document.querySelector('#gstlabel').value.trim()||'GST Number',gst:document.querySelector('#gst').value,mobile:document.querySelector('#mob').value,address:document.querySelector('#addr').value,taxLabel:document.querySelector('#taxlabel').value.trim()||'Tax Rate',taxRate:+document.querySelector('#taxrate').value||0,accent:document.querySelector('#accent').value,gstRates:(+document.querySelector('#taxrate').value||0)>0};state.currency=document.querySelector('#cur').value;state.theme=document.querySelector('#theme').value;document.documentElement.style.setProperty('--accent',state.settings.accent);document.documentElement.style.setProperty('--accent2',state.theme==='dark'?'#2b2550':'#ebe8ff');document.documentElement.style.colorScheme=state.theme;toast('Settings saved');render()}
-async function saveBill(){let now=new Date(),payment=document.querySelector('#paymentMode')?.value||state.payment;if(!payment){toast('Please select a payment mode');document.querySelector('#paymentMode')?.focus();return}let validItems=state.items.filter(x=>String(x.p||'').trim()||(+x.q||0)>0||(+x.u||0)>0);if(!validItems.length){toast('Please add at least one item');return}let sum=state.items.reduce((s,x)=>s+(+x.q||0)*(+x.u||0),0),discount=+state.discount||0,disc=state.discountType==='percent'?sum*discount/100:discount,after=Math.max(0,sum-disc),tax=state.settings.taxRate?after*state.settings.taxRate/100:0,grand=after+tax;let customerName=document.querySelector('#cn')?.value.trim()||'',customerPhone=document.querySelector('#cp')?.value.trim()||'',customerAddress=document.querySelector('#ca')?.value.trim()||'';let b={billNo:billNo(),id:billNo(),date:now.toISOString(),customerName,customerPhone,customerAddress,customer:customerName,phone:customerPhone,address:customerAddress,items:JSON.parse(JSON.stringify(state.items)),paymentMode:payment,payment,createdBy:state.user,user:state.user,discountType:state.discountType,discount,subtotal:sum,taxRate:state.settings.taxRate,taxLabel:state.settings.taxLabel,taxAmount:tax,grandTotal:grand,currency:state.currency};let btn=document.querySelector('.actions .primary');if(btn){btn.disabled=true;btn.textContent='Saving...'}try{let response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveBill',bill:b})});let result=await response.json();if(!response.ok||!result.success)throw new Error(result.error||'Unable to save bill');b.id=result.billNo||b.id;const displayDate=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});state.bills.unshift({...b,date:displayDate});toast('Bill saved to Google Sheet: '+b.id);printBill(b.id);resetBill()}catch(error){toast('Save failed: '+error.message)}finally{if(btn){btn.disabled=false;btn.textContent='Save & Print'}}}
-function resetBill(){state.items=[{p:'',q:1,u:0}];state.customer={name:'',phone:'',address:''};state.payment='';state.discountType='amount';state.discount=0;render()}
-function printBill(id){let b=state.bills.find(x=>x.id===id)||((state.history.results||[]).find(x=>x.id===id||x.billNo===id));if(!b)return;let sum=total(b),disc=b.discountType==='percent'?sum*(b.discount||0)/100:(b.discount||0),after=Math.max(0,sum-disc),tax=(b.taxRate||0)*after/100,grand=after+tax,taxLabel=b.taxLabel||state.settings.taxLabel;let rows=b.items.map((x,i)=>`<tr><td>${i+1}</td><td>${x.p||''}</td><td>${x.q}</td><td>${money(x.u)}</td><td>${money((+x.q||0)*(+x.u||0))}</td></tr>`).join('');let w=window.open('','_blank','width=800,height=900');w.document.write(`<html><head><title>${b.id}</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#555}.meta{display:flex;justify-content:space-between;margin:20px 0}.customer{border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:12px 0}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ccc;padding:8px;text-align:left}th{background:#f2f2f2}.right{text-align:right}.total{margin-left:auto;width:320px;margin-top:18px}.grand{font-size:20px;font-weight:bold;border-top:2px solid #111;padding-top:10px}.words{margin-top:10px;color:#555}@media print{@page{size:auto;margin:8mm}body{padding:0}}</style></head><body><h1>${state.settings.name}</h1><div class="sub">${state.settings.gstLabel}: ${state.settings.gst}</div><div class="sub">${state.settings.mobile||''} ${state.settings.address?'· '+state.settings.address:''}</div><div class="meta"><span><b>Bill No.</b> ${b.id}</span><span><b>Date</b> ${b.date}</span></div><div class="customer"><b>Customer:</b> ${b.customer||'Walk-in'} ${b.phone?' · '+b.phone:''}<br>${b.address||''}</div><table><tr><th>S.No.</th><th>Particular</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr>${rows}</table><div class="total"><div>Subtotal: <b>${money(sum)}</b></div><div>Discount: <b>-${money(disc)}</b></div>${b.taxRate?`<div>${taxLabel} (${b.taxRate}%): <b>${money(tax)}</b></div>`:''}<div>Payment: <b>${b.payment}</b></div><div class="grand">Grand Total: ${money(grand)}</div><div class="words">${words(grand)}</div></div><p style="margin-top:35px;font-size:12px">Created by: ${b.user}</p><script>window.print()<\/script></body></html>`);w.document.close()}
-function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';document.documentElement.style.colorScheme=state.theme;render()}
-function toast(t){let el=document.querySelector('#toast');if(!el){let d=document.createElement('div');d.id='toast';document.body.appendChild(d);el=d}el.innerHTML='<div class="toast">'+t+'</div>';setTimeout(()=>el.innerHTML='',3000)}function go(v){if(v==='settings'&&state.role!=='ADMIN'){toast('Admin access required');return}state.view=v;render()}restoreSession();render();
-</script></body></html>async function searchBillHistory(){let h=state.history;h.results=null;h.loading=true;const mode=document.querySelector('#searchMode')?.value||'date';h.mode=mode;h.date=document.querySelector('#historyDate')?.value||'';h.from=document.querySelector('#historyFrom')?.value||'';h.to=document.querySelector('#historyTo')?.value||'';h.query=(document.querySelector('#historyQuery')?.value||'').trim();h.billNo=(document.querySelector('#historyBillNo')?.value||'').trim();h.payment=document.querySelector('#historyPayment')?.value||'All';if(mode==='date'&&!h.date){toast('Please select a date');h.loading=false;return}if(mode==='range'&&(!h.from||!h.to)){toast('Please select both dates');h.loading=false;return}if(mode==='range'&&h.from>h.to){toast('From date cannot be after To date');h.loading=false;return}const btn=document.querySelector('#historySearchBtn');if(btn){btn.disabled=true;btn.textContent='Searching...'}const table=document.querySelector('#billtable');if(table)table.innerHTML='<div class="empty">Searching Google Sheet...</div>';try{let search={mode,date:h.date,fromDate:h.from,toDate:h.to,query:h.query,billNo:h.billNo,payment:h.payment};const response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'searchBills',search})});const result=await response.json();if(!response.ok||!result.success)throw new Error(result.error||'Search failed');h.results=result.bills||[];state.bills=mergeBills(state.bills,h.results);if(table)table.innerHTML=billTable(h.results);if(!h.results.length)toast(mode==='date'?`No data for ${h.date}`:`No data between ${h.from} and ${h.to}`);else toast(`${h.results.length} bill(s) found`);}catch(e){h.results=[];if(table)table.innerHTML='<div class="empty">Search failed: '+escapeHtml(e.message)+'</div>';toast('Search failed: '+e.message)}finally{h.loading=false;if(btn){btn.disabled=false;btn.textContent='🔎 Search Google Sheet'}}}
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const API_URL = '/api/save-bill';
+
+const USERS = {
+  admin:{
+    password:'admin123',
+    role:'ADMIN',
+    name:'Admin'
+  },
+
+  cashier:{
+    password:'cashier123',
+    role:'USER',
+    name:'Billing User'
+  }
+};
+
+/*
+ * Login remains active for 30 days.
+ */
+const SESSION_KEY = 'sghBillingSession';
+const SESSION_DAYS = 30;
+
+const SETTINGS_KEY = 'sghBillingSettings';
+
+const state = {
+
+  view:'dashboard',
+
+  loggedIn:false,
+
+  role:'',
+
+  user:'',
+
+  currency:'NPR',
+
+  theme:'dark',
+
+  settings:{
+    name:'Shivam Gift House',
+    gstLabel:'PAN Number',
+    gst:'08XXXXXXXX00',
+    mobile:'',
+    address:'Bardaghat--4, NawalParasi',
+    taxLabel:'Tax Rate',
+    taxRate:0,
+    gstRates:false,
+    accent:'#8b7cff'
+  },
+
+  bills:[],
+
+  items:[
+    {
+      p:'',
+      q:1,
+      u:0
+    }
+  ],
+
+  customer:{
+    name:'',
+    phone:'',
+    address:''
+  },
+
+  payment:'',
+
+  discountType:'amount',
+
+  discount:0,
+
+  todayBills:[],
+
+  todayLoading:false,
+
+  history:{
+    mode:'date',
+    date:'',
+    from:'',
+    to:'',
+    query:'',
+    billNo:'',
+    payment:'All',
+    results:null,
+    loading:false
+  }
+};
+
+
+/* =========================================================
+   BASIC HELPERS
+========================================================= */
+
+function money(n){
+
+  return new Intl.NumberFormat(
+    state.currency === 'NPR'
+      ? 'en-NP'
+      : 'en-IN',
+    {
+      style:'currency',
+      currency:state.currency,
+      maximumFractionDigits:2
+    }
+  ).format(Number(n)||0);
+
+}
+
+
+function total(b){
+
+  return (b.items||[]).reduce(
+    (s,x)=>
+      s+
+      (Number(x.q)||0)*
+      (Number(x.u)||0),
+    0
+  );
+
+}
+
+
+function billGrand(b){
+
+  const subtotal = total(b);
+
+  const discount =
+    b.discountType === 'percent'
+      ? subtotal*(Number(b.discount)||0)/100
+      : Number(b.discount)||0;
+
+  const after =
+    Math.max(0,subtotal-discount);
+
+  const tax =
+    after*(Number(b.taxRate)||0)/100;
+
+  return after+tax;
+
+}
+
+
+function localToday(){
+
+  const d = new Date();
+
+  const y = d.getFullYear();
+
+  const m = String(
+    d.getMonth()+1
+  ).padStart(2,'0');
+
+  const day = String(
+    d.getDate()
+  ).padStart(2,'0');
+
+  return `${y}-${m}-${day}`;
+
+}
+
+
+function formatDisplayDate(date){
+
+  if(!date) return '';
+
+  const d =
+    date instanceof Date
+      ? date
+      : new Date(date);
+
+  if(isNaN(d.getTime()))
+    return String(date);
+
+  return d.toLocaleDateString(
+    'en-GB',
+    {
+      day:'2-digit',
+      month:'short',
+      year:'numeric'
+    }
+  );
+
+}
+
+
+function formatDisplayTime(date){
+
+  if(!date) return '';
+
+  const d =
+    date instanceof Date
+      ? date
+      : new Date(date);
+
+  if(isNaN(d.getTime()))
+    return '';
+
+  return d.toLocaleTimeString(
+    'en-GB',
+    {
+      hour:'2-digit',
+      minute:'2-digit',
+      second:'2-digit'
+    }
+  );
+
+}
+
+
+function escapeHtml(v){
+
+  return String(v ?? '')
+    .replace(
+      /[&<>"']/g,
+      c=>({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+      }[c])
+    );
+
+}
+
+
+/* =========================================================
+   NUMBER TO WORDS
+========================================================= */
+
+function words(n){
+
+  n=Math.round(Number(n)||0);
+
+  if(!n)
+    return 'Zero Only';
+
+  const a=[
+    '',
+    'One',
+    'Two',
+    'Three',
+    'Four',
+    'Five',
+    'Six',
+    'Seven',
+    'Eight',
+    'Nine',
+    'Ten',
+    'Eleven',
+    'Twelve',
+    'Thirteen',
+    'Fourteen',
+    'Fifteen',
+    'Sixteen',
+    'Seventeen',
+    'Eighteen',
+    'Nineteen'
+  ];
+
+  const b=[
+    '',
+    '',
+    'Twenty',
+    'Thirty',
+    'Forty',
+    'Fifty',
+    'Sixty',
+    'Seventy',
+    'Eighty',
+    'Ninety'
+  ];
+
+  function two(x){
+
+    return x<20
+      ? a[x]
+      : b[Math.floor(x/10)] +
+        (x%10?' '+a[x%10]:'');
+
+  }
+
+  function f(x){
+
+    if(x<100)
+      return two(x);
+
+    if(x<1000)
+      return a[Math.floor(x/100)] +
+        ' Hundred' +
+        (x%100?' '+two(x%100):'');
+
+    if(x<100000)
+      return f(Math.floor(x/1000)) +
+        ' Thousand' +
+        (x%1000?' '+f(x%1000):'');
+
+    if(x<10000000)
+      return f(Math.floor(x/100000)) +
+        ' Lakh' +
+        (x%100000?' '+f(x%100000):'');
+
+    return f(Math.floor(x/10000000)) +
+      ' Crore' +
+      (x%10000000?' '+f(x%10000000):'');
+
+  }
+
+  return f(n)+' Only';
+
+}
+
+
+/* =========================================================
+   BILL NUMBER
+========================================================= */
+
+function billNo(){
+
+  const d = new Date();
+
+  const yy =
+    String(d.getFullYear()).slice(-2);
+
+  /*
+   * Current day of month.
+   * Example:
+   * 02 January => 02A
+   * 15 February => 15B
+   */
+  const day =
+    String(d.getDate()).padStart(2,'0');
+
+  const monthLetter =
+    String.fromCharCode(
+      65+d.getMonth()
+    );
+
+  const prefix =
+    `SGH-${yy}${day}${monthLetter}`;
+
+  const nums =
+    state.bills
+      .map(b=>b.id||b.billNo||'')
+      .filter(id=>id.startsWith(prefix))
+      .map(id=>Number(id.slice(-4))||0);
+
+  return prefix+
+    String(
+      Math.max(0,...nums)+1
+    ).padStart(4,'0');
+
+}
+
+
+/* =========================================================
+   SETTINGS STORAGE
+========================================================= */
+
+function loadSettings(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        SETTINGS_KEY
+      );
+
+    if(!raw) return;
+
+    const saved =
+      JSON.parse(raw);
+
+    if(saved.settings)
+      state.settings={
+        ...state.settings,
+        ...saved.settings
+      };
+
+    if(saved.currency)
+      state.currency=saved.currency;
+
+    if(saved.theme)
+      state.theme=saved.theme;
+
+  }catch(e){
+
+    console.error(
+      'Settings load error',
+      e
+    );
+
+  }
+
+}
+
+
+function persistSettings(){
+
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify({
+      settings:state.settings,
+      currency:state.currency,
+      theme:state.theme
+    })
+  );
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function loginScreen(){
+
+  const app =
+    document.querySelector('#app');
+
+  app.innerHTML=`
+
+    <main
+      style="
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        padding:20px;
+      "
+    >
+
+      <section
+        class="card"
+        style="
+          width:min(420px,100%);
+          padding:26px;
+        "
+      >
+
+        <div
+          style="
+            text-align:center;
+            margin-bottom:22px;
+          "
+        >
+
+          <div
+            class="logo"
+            style="
+              margin:0 auto 12px;
+            "
+          >
+            SG
+          </div>
+
+          <h1
+            style="
+              margin:0;
+            "
+          >
+            ${escapeHtml(state.settings.name)}
+          </h1>
+
+          <div
+            class="muted"
+            style="margin-top:5px"
+          >
+            Billing System
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Username</label>
+
+          <input
+            id="loginUser"
+            autocomplete="username"
+            placeholder="Username"
+          >
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>Password</label>
+
+          <input
+            id="loginPass"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Password"
+            onkeydown="
+              if(event.key==='Enter')
+                login()
+            "
+          >
+
+        </div>
+
+
+        <button
+          class="primary"
+          style="
+            width:100%;
+            margin-top:16px;
+          "
+          onclick="login()"
+        >
+          Login
+        </button>
+
+
+        <div
+          class="muted"
+          style="
+            font-size:12px;
+            margin-top:14px;
+            text-align:center;
+          "
+        >
+          Access is based on your assigned role.
+        </div>
+
+      </section>
+
+    </main>
+
+  `;
+
+}
+
+
+function login(){
+
+  const u =
+    (
+      document.querySelector('#loginUser')
+        ?.value ||
+      ''
+    )
+    .trim()
+    .toLowerCase();
+
+  const p =
+    document.querySelector('#loginPass')
+      ?.value || '';
+
+  const account =
+    USERS[u];
+
+  if(
+    !account ||
+    account.password!==p
+  ){
+
+    toast(
+      'Invalid username or password'
+    );
+
+    return;
+
+  }
+
+  state.loggedIn=true;
+
+  state.role=account.role;
+
+  state.user=account.name;
+
+  state.view='dashboard';
+
+  localStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      username:u,
+      role:account.role,
+      name:account.name,
+      expiresAt:
+        Date.now()+
+        SESSION_DAYS*
+        24*
+        60*
+        60*
+        1000
+    })
+  );
+
+  render();
+
+}
+
+
+function logout(){
+
+  state.loggedIn=false;
+
+  state.role='';
+
+  state.user='';
+
+  state.view='dashboard';
+
+  localStorage.removeItem(
+    SESSION_KEY
+  );
+
+  render();
+
+}
+
+
+function restoreSession(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        SESSION_KEY
+      );
+
+    if(!raw)
+      return;
+
+    const s =
+      JSON.parse(raw);
+
+    if(
+      !s.expiresAt ||
+      Date.now()>=s.expiresAt
+    ){
+
+      localStorage.removeItem(
+        SESSION_KEY
+      );
+
+      return;
+
+    }
+
+    const account =
+      USERS[s.username];
+
+    if(
+      !account ||
+      account.role!==s.role
+    ){
+
+      localStorage.removeItem(
+        SESSION_KEY
+      );
+
+      return;
+
+    }
+
+    state.loggedIn=true;
+
+    state.role=account.role;
+
+    state.user=account.name;
+
+  }catch(e){
+
+    localStorage.removeItem(
+      SESSION_KEY
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   MAIN RENDER
+========================================================= */
+
+function render(){
+
+  const app =
+    document.querySelector('#app');
+
+  document.documentElement
+    .style
+    .setProperty(
+      '--accent',
+      state.settings.accent
+    );
+
+  document.documentElement
+    .style
+    .colorScheme =
+      state.theme;
+
+
+  if(
+    state.theme==='light'
+  ){
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--bg',
+        '#f4f7fb'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--surface',
+        '#ffffff'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--surface2',
+        '#f8fafc'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--text',
+        '#172033'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--muted',
+        '#667085'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--border',
+        '#e4e8ef'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--accent2',
+        '#ebe8ff'
+      );
+
+  }else{
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--bg',
+        '#10141b'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--surface',
+        '#171c24'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--surface2',
+        '#202733'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--text',
+        '#f4f7fb'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--muted',
+        '#a8b0bf'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--border',
+        '#303846'
+      );
+
+    document.documentElement
+      .style
+      .setProperty(
+        '--accent2',
+        '#2b2550'
+      );
+
+  }
+
+
+  if(!state.loggedIn){
+
+    loginScreen();
+
+    return;
+
+  }
+
+
+  let nav=[
+    'dashboard',
+    'new',
+    'bills',
+    'outstanding'
+  ];
+
+
+  /*
+   * Admin navigation is completely
+   * omitted for normal users.
+   */
+  if(state.role==='ADMIN')
+    nav.push('settings');
+
+
+  app.innerHTML=`
+
+    <header class="top">
+
+      <div class="topin">
+
+        <div class="brand">
+
+          <div class="logo">
+            SG
+          </div>
+
+          <div>
+
+            <h1>
+              ${escapeHtml(
+                state.settings.name
+              )}
+            </h1>
+
+            <small>
+              ${
+                state.role==='ADMIN'
+                  ? 'Administrator'
+                  : 'Billing User'
+              }
+              ·
+              ${escapeHtml(state.user)}
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <nav class="nav">
+
+          ${nav.map(v=>`
+
+            <button
+              class="${
+                state.view===v
+                  ? 'active'
+                  : ''
+              }"
+              onclick="go('${v}')"
+            >
+              ${
+                {
+                  dashboard:'Dashboard',
+                  new:'New Bill',
+                  bills:'Bills',
+                  outstanding:'Outstanding',
+                  settings:'Admin'
+                }[v]
+              }
+            </button>
+
+          `).join('')}
+
+
+          <button
+            onclick="toggleTheme()"
+          >
+            ${
+              state.theme==='dark'
+                ? '☀ Light'
+                : '☾ Dark'
+            }
+          </button>
+
+
+          <button
+            onclick="logout()"
+          >
+            Logout
+          </button>
+
+        </nav>
+
+      </div>
+
+    </header>
+
+
+    <main class="main">
+
+      ${
+        state.view==='dashboard'
+          ? dashboard()
+          : state.view==='new'
+          ? newBill()
+          : state.view==='bills'
+          ? bills()
+          : state.view==='outstanding'
+          ? outstanding()
+          : settings()
+      }
+
+    </main>
+
+
+    <div id="toast"></div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function dashboard(){
+
+  const today =
+    state.bills.filter(
+      b=>isTodayBill(b)
+    );
+
+  const sales =
+    today.reduce(
+      (s,b)=>
+        s+
+        Number(
+          b.grandTotal!=null
+            ? b.grandTotal
+            : billGrand(b)
+        ),
+      0
+    );
+
+
+  const cash =
+    today
+      .filter(
+        b=>b.payment==='Cash'
+      )
+      .reduce(
+        (s,b)=>
+          s+
+          Number(
+            b.grandTotal!=null
+              ? b.grandTotal
+              : billGrand(b)
+          ),
+        0
+      );
+
+
+  const upi =
+    today
+      .filter(
+        b=>b.payment==='UPI'
+      )
+      .reduce(
+        (s,b)=>
+          s+
+          Number(
+            b.grandTotal!=null
+              ? b.grandTotal
+              : billGrand(b)
+          ),
+        0
+      );
+
+
+  const bal =
+    today
+      .filter(
+        b=>b.payment==='Balance'
+      )
+      .reduce(
+        (s,b)=>
+          s+
+          Number(
+            b.grandTotal!=null
+              ? b.grandTotal
+              : billGrand(b)
+          ),
+        0
+      );
+
+
+  return `
+
+    <div class="pagehead">
+
+      <div>
+
+        <h2>
+          Dashboard
+        </h2>
+
+        <div class="muted">
+          Today's billing overview
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="go('new')"
+      >
+        ＋ New Bill
+      </button>
+
+    </div>
+
+
+    <div class="grid">
+
+      <div class="card">
+
+        <div class="label">
+          Today's Bills
+        </div>
+
+        <div class="metric">
+          ${today.length}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          Today's Sales
+        </div>
+
+        <div class="metric">
+          ${money(sales)}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          Cash + UPI
+        </div>
+
+        <div class="metric">
+          ${money(cash+upi)}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="label">
+          Outstanding
+        </div>
+
+        <div class="metric">
+          ${money(bal)}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="section card">
+
+      <div class="pagehead">
+
+        <div>
+
+          <h3 style="margin:0">
+            Today's Outstanding
+          </h3>
+
+          <small class="muted">
+            Unpaid bills created today
+          </small>
+
+        </div>
+
+
+        <button
+          class="ghost"
+          onclick="go('outstanding')"
+        >
+          View all
+        </button>
+
+      </div>
+
+
+      ${
+        today.filter(
+          b=>b.payment==='Balance'
+        ).length
+
+        ?
+
+        `
+        <div class="tablewrap">
+
+          <table class="table">
+
+            <tr>
+              <th>Bill No.</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Created By</th>
+            </tr>
+
+            ${
+              today
+                .filter(
+                  b=>b.payment==='Balance'
+                )
+                .map(
+                  b=>`
+
+                    <tr>
+
+                      <td>
+                        ${escapeHtml(b.id||'')}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          b.customer||
+                          'Walk-in'
+                        )}
+                      </td>
+
+                      <td>
+                        ${money(
+                          b.grandTotal!=null
+                            ? b.grandTotal
+                            : billGrand(b)
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          b.user||''
+                        )}
+                      </td>
+
+                    </tr>
+
+                  `
+                )
+                .join('')
+            }
+
+          </table>
+
+        </div>
+        `
+
+        :
+
+        `
+        <div class="empty">
+          No outstanding bills today.
+        </div>
+        `
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   NEW BILL
+========================================================= */
+
+function newBill(){
+
+  const sum =
+    state.items.reduce(
+      (s,x)=>
+        s+
+        (Number(x.q)||0)*
+        (Number(x.u)||0),
+      0
+    );
+
+
+  const discount =
+    Number(state.discount)||0;
+
+
+  const disc =
+    state.discountType==='percent'
+      ? sum*discount/100
+      : discount;
+
+
+  const after =
+    Math.max(
+      0,
+      sum-disc
+    );
+
+
+  const tax =
+    state.settings.taxRate
+      ? after*
+        state.settings.taxRate/
+        100
+      : 0;
+
+
+  const grand =
+    after+tax;
+
+
+  return `
+
+    <div class="pagehead">
+
+      <div>
+
+        <h2>
+          New Bill
+        </h2>
+
+        <div class="muted">
+
+          Bill No.
+          <b>${billNo()}</b>
+          · automatically generated
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="ghost"
+          onclick="resetBill()"
+        >
+          Clear
+        </button>
+
+
+        <button
+          class="primary"
+          id="saveBillBtn"
+          onclick="saveBill()"
+        >
+          Save & Print
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="billbox">
+
+      <section class="card">
+
+        <div class="formgrid">
+
+          <div class="field">
+
+            <label>
+              Customer Name
+            </label>
+
+            <input
+              id="cn"
+              value="${escapeHtml(
+                state.customer.name
+              )}"
+              placeholder="Optional"
+              oninput="
+                state.customer.name=this.value
+              "
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Phone
+            </label>
+
+            <input
+              id="cp"
+              value="${escapeHtml(
+                state.customer.phone
+              )}"
+              placeholder="Optional"
+              oninput="
+                state.customer.phone=this.value
+              "
+            >
+
+          </div>
+
+
+          <div
+            class="field"
+            style="grid-column:1/-1"
+          >
+
+            <label>
+              Address
+            </label>
+
+            <input
+              id="ca"
+              value="${escapeHtml(
+                state.customer.address
+              )}"
+              placeholder="Optional"
+              oninput="
+                state.customer.address=this.value
+              "
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="items">
+
+          <div class="tablewrap">
+
+            <table class="table">
+
+              <tr>
+
+                <th>S.No.</th>
+                <th>Particular</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+                <th></th>
+
+              </tr>
+
+
+              ${
+                state.items.map(
+                  (x,i)=>`
+
+                    <tr>
+
+                      <td>
+                        ${i+1}
+                      </td>
+
+
+                      <td>
+
+                        <input
+                          value="${escapeHtml(
+                            x.p
+                          )}"
+                          oninput="
+                            state.items[${i}].p=this.value
+                          "
+                        >
+
+                      </td>
+
+
+                      <td>
+
+                        <input
+                          class="narrow"
+                          type="number"
+                          min="0"
+                          value="${x.q}"
+                          oninput="
+                            state.items[${i}].q=this.value;
+                            refreshBillCalculations()
+                          "
+                        >
+
+                      </td>
+
+
+                      <td>
+
+                        <input
+                          class="narrow"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value="${x.u}"
+                          oninput="
+                            state.items[${i}].u=this.value;
+                            refreshBillCalculations()
+                          "
+                        >
+
+                      </td>
+
+
+                      <td class="item-total">
+
+                        ${
+                          money(
+                            (Number(x.q)||0)*
+                            (Number(x.u)||0)
+                          )
+                        }
+
+                      </td>
+
+
+                      <td>
+
+                        <button
+                          class="remove"
+                          title="Remove item"
+                          onclick="
+                            removeItem(${i})
+                          "
+                        >
+                          ×
+                        </button>
+
+                      </td>
+
+                    </tr>
+
+                  `
+                ).join('')
+              }
+
+            </table>
+
+          </div>
+
+
+          <button
+            class="ghost"
+            style="margin-top:10px"
+            onclick="addItem()"
+          >
+            ＋ Add Item
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <aside class="card">
+
+        <div class="field">
+
+          <label>
+            Payment Mode
+            <span
+              style="color:var(--danger)"
+            >
+              *
+            </span>
+          </label>
+
+
+          <select
+            id="paymentMode"
+            required
+            onchange="
+              state.payment=this.value
+            "
+          >
+
+            <option
+              value=""
+              ${
+                state.payment===''
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Select payment mode
+            </option>
+
+            <option
+              value="Cash"
+              ${
+                state.payment==='Cash'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Cash
+            </option>
+
+            <option
+              value="UPI"
+              ${
+                state.payment==='UPI'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              UPI
+            </option>
+
+            <option
+              value="Balance"
+              ${
+                state.payment==='Balance'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Balance
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Discount
+          </label>
+
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:1fr 92px;
+              gap:7px;
+            "
+          >
+
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value="${state.discount}"
+              oninput="
+                state.discount=this.value;
+                refreshBillCalculations()
+              "
+            >
+
+
+            <select
+              onchange="
+                state.discountType=this.value;
+                refreshBillCalculations()
+              "
+            >
+
+              <option
+                value="amount"
+                ${
+                  state.discountType==='amount'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Amount
+              </option>
+
+              <option
+                value="percent"
+                ${
+                  state.discountType==='percent'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                %
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="totals">
+
+          <div class="totalbox">
+
+            <div class="totalrow">
+
+              <span>
+                Subtotal
+              </span>
+
+              <b id="bill-subtotal">
+                ${money(sum)}
+              </b>
+
+            </div>
+
+
+            <div class="totalrow">
+
+              <span>
+                Discount
+              </span>
+
+              <b id="bill-discount">
+                -${money(disc)}
+              </b>
+
+            </div>
+
+
+            ${
+              state.settings.taxRate
+                ? `
+
+                  <div class="totalrow">
+
+                    <span>
+                      ${escapeHtml(
+                        state.settings.taxLabel
+                      )}
+                      (${state.settings.taxRate}%)
+                    </span>
+
+                    <b id="bill-tax">
+                      ${money(tax)}
+                    </b>
+
+                  </div>
+
+                `
+                : ''
+            }
+
+
+            <div class="totalrow grand">
+
+              <span>
+                Grand Total
+              </span>
+
+              <b id="bill-grand">
+                ${money(grand)}
+              </b>
+
+            </div>
+
+
+            <div class="word">
+
+              Amount in words:
+
+              <b id="bill-words">
+                ${words(grand)}
+              </b>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="section muted"
+          style="font-size:12px"
+        >
+
+          Date/time will be recorded automatically.
+
+          Created by:
+
+          <b>
+            ${escapeHtml(state.user)}
+          </b>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  `;
+
+}
+
+
+function addItem(){
+
+  state.items.push({
+    p:'',
+    q:1,
+    u:0
+  });
+
+  render();
+
+}
+
+
+function removeItem(i){
+
+  if(state.items.length<=1){
+
+    toast(
+      'At least one item is required'
+    );
+
+    return;
+
+  }
+
+  state.items.splice(i,1);
+
+  render();
+
+}
+
+
+function refreshBillCalculations(){
+
+  const sum =
+    state.items.reduce(
+      (s,x)=>
+        s+
+        (Number(x.q)||0)*
+        (Number(x.u)||0),
+      0
+    );
+
+
+  const discount =
+    Number(state.discount)||0;
+
+
+  const disc =
+    state.discountType==='percent'
+      ? sum*discount/100
+      : discount;
+
+
+  const after =
+    Math.max(
+      0,
+      sum-disc
+    );
+
+
+  const tax =
+    state.settings.taxRate
+      ? after*
+        state.settings.taxRate/
+        100
+      : 0;
+
+
+  const grand =
+    after+tax;
+
+
+  document
+    .querySelectorAll('.item-total')
+    .forEach(
+      (el,i)=>{
+
+        const x =
+          state.items[i];
+
+        if(x){
+
+          el.textContent =
+            money(
+              (Number(x.q)||0)*
+              (Number(x.u)||0)
+            );
+
+        }
+
+      }
+    );
+
+
+  const s =
+    document.querySelector(
+      '#bill-subtotal'
+    );
+
+  const d =
+    document.querySelector(
+      '#bill-discount'
+    );
+
+  const t =
+    document.querySelector(
+      '#bill-tax'
+    );
+
+  const g =
+    document.querySelector(
+      '#bill-grand'
+    );
+
+  const w =
+    document.querySelector(
+      '#bill-words'
+    );
+
+
+  if(s)
+    s.textContent=money(sum);
+
+  if(d)
+    d.textContent='-'+money(disc);
+
+  if(t)
+    t.textContent=money(tax);
+
+  if(g)
+    g.textContent=money(grand);
+
+  if(w)
+    w.textContent=words(grand);
+
+}
+
+
+/* =========================================================
+   BILL HISTORY
+========================================================= */
+
+function bills(){
+
+  const h =
+    state.history;
+
+  /*
+   * Automatically load today's records
+   * after the page is displayed.
+   */
+  setTimeout(
+    loadTodayBills,
+    0
+  );
+
+
+  return `
+
+    <div class="pagehead">
+
+      <div>
+
+        <h2>
+          Bill History
+        </h2>
+
+        <div class="muted">
+          Search previous bills by date or date range.
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-bottom:15px"
+    >
+
+      <div class="pagehead">
+
+        <div>
+
+          <h3 style="margin:0">
+            Today's Overview
+          </h3>
+
+          <div
+            class="muted"
+            id="todayBillCount"
+          >
+
+            ${
+              state.todayLoading
+                ? 'Loading...'
+                :
+                  `${state.todayBills.length}
+                   bill${
+                     state.todayBills.length===1
+                       ? ''
+                       : 's'
+                   }
+                   prepared today`
+            }
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="ghost"
+          onclick="loadTodayBills()"
+        >
+          ↻ Refresh
+        </button>
+
+      </div>
+
+
+      <div id="todayBillTable">
+
+        ${todayOverviewTable(
+          state.todayBills
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="formgrid">
+
+        <div class="field">
+
+          <label>
+            Search Type
+          </label>
+
+          <select
+            id="searchMode"
+            onchange="
+              setHistoryMode(this.value)
+            "
+          >
+
+            <option
+              value="date"
+              ${
+                h.mode==='date'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Particular Date
+            </option>
+
+            <option
+              value="range"
+              ${
+                h.mode==='range'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Between Two Dates
+            </option>
+
+          </select>
+
+        </div>
+
+
+        ${
+          h.mode==='date'
+
+            ?
+
+            `
+            <div class="field">
+
+              <label>
+                Date
+              </label>
+
+              <input
+                id="historyDate"
+                type="date"
+                value="${
+                  h.date||
+                  localToday()
+                }"
+              >
+
+            </div>
+            `
+
+            :
+
+            `
+
+            <div class="field">
+
+              <label>
+                From Date
+              </label>
+
+              <input
+                id="historyFrom"
+                type="date"
+                value="${
+                  h.from||
+                  localToday()
+                }"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                To Date
+              </label>
+
+              <input
+                id="historyTo"
+                type="date"
+                value="${
+                  h.to||
+                  localToday()
+                }"
+              >
+
+            </div>
+
+            `
+        }
+
+
+        <div class="field">
+
+          <label>
+            Customer Name
+          </label>
+
+          <input
+            id="historyQuery"
+            value="${escapeHtml(
+              h.query||''
+            )}"
+            placeholder="Optional"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Bill Number
+          </label>
+
+          <input
+            id="historyBillNo"
+            value="${escapeHtml(
+              h.billNo||''
+            )}"
+            placeholder="SGH-..."
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Payment
+          </label>
+
+          <select id="historyPayment">
+
+            <option
+              value="All"
+              ${
+                h.payment==='All'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              All
+            </option>
+
+            <option
+              value="Cash"
+              ${
+                h.payment==='Cash'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Cash
+            </option>
+
+            <option
+              value="UPI"
+              ${
+                h.payment==='UPI'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              UPI
+            </option>
+
+            <option
+              value="Balance"
+              ${
+                h.payment==='Balance'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Balance
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="actions"
+        style="margin-top:14px"
+      >
+
+        <button
+          class="primary"
+          id="historySearchBtn"
+          onclick="searchBillHistory()"
+        >
+          🔎 Search
+        </button>
+
+
+        <button
+          class="ghost"
+          onclick="clearBillHistorySearch()"
+        >
+          Clear
+        </button>
+
+      </div>
+
+
+      <div
+        id="billtable"
+        style="margin-top:15px"
+      >
+
+        ${
+          h.results===null
+
+            ?
+
+            `
+            <div class="empty">
+              Select a date or date range,
+              then press Search.
+            </div>
+            `
+
+            :
+
+            billTable(h.results)
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function setHistoryMode(mode){
+
+  state.history.mode=mode;
+
+  state.history.results=null;
+
+  render();
+
+}
+
+
+function clearBillHistorySearch(){
+
+  state.history={
+    mode:'date',
+    date:localToday(),
+    from:'',
+    to:'',
+    query:'',
+    billNo:'',
+    payment:'All',
+    results:null,
+    loading:false
+  };
+
+  render();
+
+}
+
+
+/*
+ * Today's overview is retrieved using the
+ * normal date-search endpoint.
+ */
+async function loadTodayBills(){
+
+  state.todayLoading=true;
+
+  const box =
+    document.querySelector(
+      '#todayBillTable'
+    );
+
+  if(box){
+
+    box.innerHTML=`
+      <div class="loading">
+        <span class="dot"></span>
+        Loading today's bills...
+      </div>
+    `;
+
+  }
+
+
+  try{
+
+    const today =
+      localToday();
+
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method:'POST',
+
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+
+          body:JSON.stringify({
+
+            action:'searchBills',
+
+            search:{
+              mode:'date',
+              date:today,
+              fromDate:'',
+              toDate:'',
+              query:'',
+              billNo:'',
+              payment:'All'
+            }
+
+          })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(
+      !response.ok ||
+      !result.success
+    ){
+
+      throw new Error(
+        result.error||
+        'Unable to load today bills'
+      );
+
+    }
+
+
+    state.todayBills =
+      result.bills||[];
+
+
+    state.todayLoading=false;
+
+
+    state.bills =
+      mergeBills(
+        state.bills,
+        state.todayBills
+      );
+
+
+    const table =
+      document.querySelector(
+        '#todayBillTable'
+      );
+
+    if(table){
+
+      table.innerHTML =
+        todayOverviewTable(
+          state.todayBills
+        );
+
+    }
+
+
+    const count =
+      document.querySelector(
+        '#todayBillCount'
+      );
+
+    if(count){
+
+      count.textContent =
+        `${state.todayBills.length}
+         bill${
+           state.todayBills.length===1
+             ? ''
+             : 's'
+         }
+         prepared today`;
+
+    }
+
+
+  }catch(e){
+
+    state.todayLoading=false;
+
+    const box2 =
+      document.querySelector(
+        '#todayBillTable'
+      );
+
+    if(box2){
+
+      box2.innerHTML=`
+        <div class="empty">
+
+          Unable to load today's bills:
+          ${escapeHtml(e.message)}
+
+        </div>
+      `;
+
+    }
+
+    const count =
+      document.querySelector(
+        '#todayBillCount'
+      );
+
+    if(count){
+
+      count.textContent =
+        'Unable to load today bills';
+
+    }
+
+  }
+
+}
+
+
+function todayOverviewTable(bs){
+
+  if(
+    state.todayLoading
+  ){
+
+    return `
+      <div class="loading">
+        <span class="dot"></span>
+        Loading...
+      </div>
+    `;
+
+  }
+
+
+  if(
+    !bs ||
+    !bs.length
+  ){
+
+    return `
+      <div class="empty">
+        No bills prepared today.
+      </div>
+    `;
+
+  }
+
+
+  return `
+
+    <div class="tablewrap">
+
+      <table class="table">
+
+        <tr>
+
+          <th>
+            Customer Name
+          </th>
+
+          <th>
+            Bill Amount
+          </th>
+
+          <th>
+            Date
+          </th>
+
+          <th>
+            Time
+          </th>
+
+        </tr>
+
+
+        ${
+          bs.map(
+            b=>`
+
+              <tr>
+
+                <td>
+                  ${escapeHtml(
+                    b.customer||
+                    b.customerName||
+                    'Walk-in'
+                  )}
+                </td>
+
+                <td>
+
+                  <b>
+                    ${money(
+                      b.grandTotal!=null
+                        ? b.grandTotal
+                        : billGrand(b)
+                    )}
+                  </b>
+
+                </td>
+
+                <td>
+                  ${escapeHtml(
+                    b.date||''
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHtml(
+                    b.time||''
+                  )}
+                </td>
+
+              </tr>
+
+            `
+          ).join('')
+        }
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   HISTORY SEARCH
+========================================================= */
+
+async function searchBillHistory(){
+
+  const h =
+    state.history;
+
+  h.results=null;
+
+  h.loading=true;
+
+
+  const mode =
+    document.querySelector(
+      '#searchMode'
+    )?.value||
+    'date';
+
+
+  h.mode=mode;
+
+
+  h.date =
+    document.querySelector(
+      '#historyDate'
+    )?.value||'';
+
+
+  h.from =
+    document.querySelector(
+      '#historyFrom'
+    )?.value||'';
+
+
+  h.to =
+    document.querySelector(
+      '#historyTo'
+    )?.value||'';
+
+
+  h.query =
+    (
+      document.querySelector(
+        '#historyQuery'
+      )?.value||
+      ''
+    )
+    .trim();
+
+
+  h.billNo =
+    (
+      document.querySelector(
+        '#historyBillNo'
+      )?.value||
+      ''
+    )
+    .trim();
+
+
+  h.payment =
+    document.querySelector(
+      '#historyPayment'
+    )?.value||
+    'All';
+
+
+  if(
+    mode==='date' &&
+    !h.date
+  ){
+
+    toast(
+      'Please select a date'
+    );
+
+    h.loading=false;
+
+    return;
+
+  }
+
+
+  if(
+    mode==='range' &&
+    (!h.from||!h.to)
+  ){
+
+    toast(
+      'Please select both dates'
+    );
+
+    h.loading=false;
+
+    return;
+
+  }
+
+
+  if(
+    mode==='range' &&
+    h.from>h.to
+  ){
+
+    toast(
+      'From date cannot be after To date'
+    );
+
+    h.loading=false;
+
+    return;
+
+  }
+
+
+  const btn =
+    document.querySelector(
+      '#historySearchBtn'
+    );
+
+
+  if(btn){
+
+    btn.disabled=true;
+
+    btn.textContent=
+      'Searching...';
+
+  }
+
+
+  const table =
+    document.querySelector(
+      '#billtable'
+    );
+
+
+  if(table){
+
+    table.innerHTML=`
+
+      <div class="loading">
+
+        <span class="dot"></span>
+
+        Searching...
+
+      </div>
+
+    `;
+
+  }
+
+
+  try{
+
+    /*
+     * This structure matches the current
+     * /api/save-bill endpoint.
+     */
+    const search={
+
+      mode:mode,
+
+      date:h.date,
+
+      fromDate:h.from,
+
+      toDate:h.to,
+
+      query:h.query,
+
+      billNo:h.billNo,
+
+      payment:h.payment
+
+    };
+
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method:'POST',
+
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+
+          body:JSON.stringify({
+
+            action:'searchBills',
+
+            search:search
+
+          })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(
+      !response.ok ||
+      !result.success
+    ){
+
+      throw new Error(
+        result.error||
+        'Search failed'
+      );
+
+    }
+
+
+    h.results =
+      result.bills||[];
+
+
+    state.bills =
+      mergeBills(
+        state.bills,
+        h.results
+      );
+
+
+    if(table){
+
+      table.innerHTML =
+        billTable(
+          h.results
+        );
+
+    }
+
+
+    if(
+      !h.results.length
+    ){
+
+      toast(
+        mode==='date'
+          ? `No data for ${h.date}`
+          : `No data between ${h.from} and ${h.to}`
+      );
+
+    }else{
+
+      toast(
+        `${h.results.length} bill(s) found`
+      );
+
+    }
+
+
+  }catch(e){
+
+    h.results=[];
+
+
+    if(table){
+
+      table.innerHTML=`
+
+        <div class="empty">
+
+          Search failed:
+          ${escapeHtml(e.message)}
+
+        </div>
+
+      `;
+
+    }
+
+
+    toast(
+      'Search failed: '+
+      e.message
+    );
+
+
+  }finally{
+
+    h.loading=false;
+
+
+    if(btn){
+
+      btn.disabled=false;
+
+      btn.textContent=
+        '🔎 Search';
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   BILL TABLE
+========================================================= */
+
+function billTable(bs){
+
+  if(
+    !bs||
+    !bs.length
+  ){
+
+    return `
+      <div class="empty">
+        No data found for the selected search.
+      </div>
+    `;
+
+  }
+
+
+  return `
+
+    <div class="tablewrap">
+
+      <table class="table">
+
+        <tr>
+
+          <th>
+            Bill No.
+          </th>
+
+          <th>
+            Date
+          </th>
+
+          <th>
+            Time
+          </th>
+
+          <th>
+            Customer
+          </th>
+
+          <th>
+            Total
+          </th>
+
+          <th>
+            Payment
+          </th>
+
+          <th>
+            Created By
+          </th>
+
+          <th>
+            Action
+          </th>
+
+        </tr>
+
+
+        ${
+          bs.map(
+            b=>`
+
+              <tr>
+
+                <td>
+                  <b>
+                    ${escapeHtml(
+                      b.id||
+                      b.billNo||
+                      ''
+                    )}
+                  </b>
+                </td>
+
+
+                <td>
+                  ${escapeHtml(
+                    b.date||''
+                  )}
+                </td>
+
+
+                <td>
+                  ${escapeHtml(
+                    b.time||''
+                  )}
+                </td>
+
+
+                <td>
+                  ${escapeHtml(
+                    b.customer||
+                    b.customerName||
+                    'Walk-in'
+                  )}
+                </td>
+
+
+                <td>
+
+                  ${money(
+                    b.grandTotal!=null
+                      ? b.grandTotal
+                      : billGrand(b)
+                  )}
+
+                </td>
+
+
+                <td>
+
+                  <span class="badge">
+                    ${escapeHtml(
+                      b.payment||
+                      b.paymentMode||
+                      ''
+                    )}
+                  </span>
+
+                </td>
+
+
+                <td>
+                  ${escapeHtml(
+                    b.user||
+                    b.createdBy||
+                    ''
+                  )}
+                </td>
+
+
+                <td>
+
+                  <button
+                    class="ghost"
+                    onclick="
+                      printBill(
+                        '${escapeHtml(
+                          b.id||
+                          b.billNo||
+                          ''
+                        )}'
+                      )
+                    "
+                  >
+                    Print
+                  </button>
+
+                </td>
+
+              </tr>
+
+            `
+          ).join('')
+        }
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   MERGE DATA
+========================================================= */
+
+function mergeBills(
+  existing,
+  incoming
+){
+
+  const map={};
+
+
+  (existing||[])
+    .forEach(
+      b=>{
+
+        const id =
+          b.id||
+          b.billNo;
+
+        if(id)
+          map[id]=b;
+
+      }
+    );
+
+
+  (incoming||[])
+    .forEach(
+      b=>{
+
+        const id =
+          b.id||
+          b.billNo;
+
+        if(id)
+          map[id]={
+            ...map[id],
+            ...b
+          };
+
+      }
+    );
+
+
+  return Object.values(map);
+
+}
+
+
+/* =========================================================
+   OUTSTANDING
+========================================================= */
+
+function outstanding(){
+
+  const bs =
+    state.bills.filter(
+      b=>b.payment==='Balance'
+    );
+
+
+  const amount =
+    bs.reduce(
+      (s,b)=>
+        s+
+        Number(
+          b.grandTotal!=null
+            ? b.grandTotal
+            : billGrand(b)
+        ),
+      0
+    );
+
+
+  return `
+
+    <div class="pagehead">
+
+      <div>
+
+        <h2>
+          Outstanding / Balance
+        </h2>
+
+        <div class="muted">
+          Unpaid bills and customer balances
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div
+        class="grid"
+        style="margin-bottom:15px"
+      >
+
+        <div>
+
+          <div class="label">
+            Outstanding Bills
+          </div>
+
+          <div class="metric">
+            ${bs.length}
+          </div>
+
+        </div>
+
+
+        <div>
+
+          <div class="label">
+            Outstanding Amount
+          </div>
+
+          <div class="metric">
+            ${money(amount)}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      ${billTable(bs)}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   ADMIN SETTINGS
+========================================================= */
+
+function settings(){
+
+  return `
+
+    <div class="pagehead">
+
+      <div>
+
+        <h2>
+          Admin Settings
+        </h2>
+
+        <div class="muted">
+          Shop identity, tax, currency and appearance
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveSettings()"
+      >
+        Save Settings
+      </button>
+
+    </div>
+
+
+    <div class="settings">
+
+      <section class="card">
+
+        <h3 style="margin-top:0">
+          Shop Details
+        </h3>
+
+
+        <div class="field">
+
+          <label>
+            Billing App Name
+          </label>
+
+          <input
+            id="sn"
+            value="${escapeHtml(
+              state.settings.name
+            )}"
+          >
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Document Number Label
+          </label>
+
+          <input
+            id="gstlabel"
+            value="${escapeHtml(
+              state.settings.gstLabel
+            )}"
+            placeholder="GST Number, PAN Number, etc."
+          >
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Document Number
+          </label>
+
+          <input
+            id="gst"
+            value="${escapeHtml(
+              state.settings.gst
+            )}"
+            placeholder="Enter number"
+          >
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Mobile
+          </label>
+
+          <input
+            id="mob"
+            value="${escapeHtml(
+              state.settings.mobile
+            )}"
+          >
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Address
+          </label>
+
+          <textarea id="addr">${escapeHtml(
+            state.settings.address
+          )}</textarea>
+
+        </div>
+
+      </section>
+
+
+      <section class="card">
+
+        <h3 style="margin-top:0">
+          Currency & Tax
+        </h3>
+
+
+        <div class="field">
+
+          <label>
+            Currency
+          </label>
+
+          <select id="cur">
+
+            <option
+              value="INR"
+              ${
+                state.currency==='INR'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              INR — Indian Rupee
+            </option>
+
+            <option
+              value="NPR"
+              ${
+                state.currency==='NPR'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              NPR — Nepali Rupee
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Tax Label
+          </label>
+
+          <input
+            id="taxlabel"
+            value="${escapeHtml(
+              state.settings.taxLabel
+            )}"
+            placeholder="Tax Rate, VAT, GST, etc."
+          >
+
+        </div>
+
+
+        <div
+          class="field"
+          style="margin-top:12px"
+        >
+
+          <label>
+            Tax Rate (%) — Admin only
+          </label>
+
+          <input
+            id="taxrate"
+            type="number"
+            min="0"
+            max="100"
+            step="0.01"
+            value="${state.settings.taxRate}"
+          >
+
+        </div>
+
+
+        <p
+          class="muted"
+          style="font-size:12px"
+        >
+          Set 0 for no tax.
+          The configured label and rate
+          appear on bills.
+        </p>
+
+
+        <hr
+          style="
+            border:0;
+            border-top:1px solid var(--border);
+            margin:20px 0;
+          "
+        >
+
+
+        <h3>
+          Appearance
+        </h3>
+
+
+        <div class="formgrid">
+
+          <div class="field">
+
+            <label>
+              Theme
+            </label>
+
+            <select id="theme">
+
+              <option
+                value="dark"
+                ${
+                  state.theme==='dark'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Dark
+              </option>
+
+              <option
+                value="light"
+                ${
+                  state.theme==='light'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Light
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Theme Color
+            </label>
+
+            <input
+              id="accent"
+              type="color"
+              value="${state.settings.accent}"
+            >
+
+          </div>
+
+        </div>
+
+
+        <p
+          class="muted"
+          style="font-size:12px"
+        >
+          Default theme is dark.
+          Admin controls the accent color.
+        </p>
+
+
+        <hr
+          style="
+            border:0;
+            border-top:1px solid var(--border);
+            margin:20px 0;
+          "
+        >
+
+
+        <h3>
+          Users & Permissions
+        </h3>
+
+
+        <p
+          class="muted"
+          style="font-size:12px"
+        >
+          Admin settings are visible only to
+          users with the ADMIN role.
+        </p>
+
+      </section>
+
+    </div>
+
+  `;
+
+}
+
+
+function saveSettings(){
+
+  state.settings={
+
+    ...state.settings,
+
+    name:
+      document.querySelector(
+        '#sn'
+      ).value.trim()||
+      'Shivam Gift House',
+
+    gstLabel:
+      document.querySelector(
+        '#gstlabel'
+      ).value.trim()||
+      'GST Number',
+
+    gst:
+      document.querySelector(
+        '#gst'
+      ).value,
+
+    mobile:
+      document.querySelector(
+        '#mob'
+      ).value,
+
+    address:
+      document.querySelector(
+        '#addr'
+      ).value,
+
+    taxLabel:
+      document.querySelector(
+        '#taxlabel'
+      ).value.trim()||
+      'Tax Rate',
+
+    taxRate:
+      Number(
+        document.querySelector(
+          '#taxrate'
+        ).value
+      )||0,
+
+    accent:
+      document.querySelector(
+        '#accent'
+      ).value
+
+  };
+
+
+  state.settings.gstRates =
+    state.settings.taxRate>0;
+
+
+  state.currency =
+    document.querySelector(
+      '#cur'
+    ).value;
+
+
+  state.theme =
+    document.querySelector(
+      '#theme'
+    ).value;
+
+
+  persistSettings();
+
+
+  toast(
+    'Settings saved'
+  );
+
+
+  render();
+
+}
+
+
+/* =========================================================
+   SAVE BILL
+========================================================= */
+
+async function saveBill(){
+
+  const now =
+    new Date();
+
+
+  const payment =
+    document.querySelector(
+      '#paymentMode'
+    )?.value||
+    state.payment;
+
+
+  if(!payment){
+
+    toast(
+      'Please select a payment mode'
+    );
+
+    document.querySelector(
+      '#paymentMode'
+    )?.focus();
+
+    return;
+
+  }
+
+
+  const validItems =
+    state.items.filter(
+      x=>
+        String(x.p||'').trim()||
+        Number(x.q)>0||
+        Number(x.u)>0
+    );
+
+
+  if(!validItems.length){
+
+    toast(
+      'Please add at least one item'
+    );
+
+    return;
+
+  }
+
+
+  const sum =
+    state.items.reduce(
+      (s,x)=>
+        s+
+        (Number(x.q)||0)*
+        (Number(x.u)||0),
+      0
+    );
+
+
+  const discount =
+    Number(state.discount)||0;
+
+
+  const disc =
+    state.discountType==='percent'
+      ? sum*discount/100
+      : discount;
+
+
+  const after =
+    Math.max(
+      0,
+      sum-disc
+    );
+
+
+  const tax =
+    state.settings.taxRate
+      ? after*
+        state.settings.taxRate/
+        100
+      : 0;
+
+
+  const grand =
+    after+tax;
+
+
+  const customerName =
+    document.querySelector(
+      '#cn'
+    )?.value.trim()||
+    '';
+
+
+  const customerPhone =
+    document.querySelector(
+      '#cp'
+    )?.value.trim()||
+    '';
+
+
+  const customerAddress =
+    document.querySelector(
+      '#ca'
+    )?.value.trim()||
+    '';
+
+
+  state.customer={
+    name:customerName,
+    phone:customerPhone,
+    address:customerAddress
+  };
+
+
+  const generatedBillNo =
+    billNo();
+
+
+  const b={
+
+    billNo:generatedBillNo,
+
+    id:generatedBillNo,
+
+    date:now.toISOString(),
+
+    customerName:customerName,
+
+    customerPhone:customerPhone,
+
+    customerAddress:customerAddress,
+
+    customer:customerName,
+
+    phone:customerPhone,
+
+    address:customerAddress,
+
+    items:
+      JSON.parse(
+        JSON.stringify(
+          validItems
+        )
+      ),
+
+    paymentMode:payment,
+
+    payment:payment,
+
+    createdBy:state.user,
+
+    user:state.user,
+
+    discountType:
+      state.discountType,
+
+    discount:discount,
+
+    subtotal:sum,
+
+    taxRate:
+      state.settings.taxRate,
+
+    taxLabel:
+      state.settings.taxLabel,
+
+    taxAmount:tax,
+
+    grandTotal:grand,
+
+    currency:
+      state.currency
+
+  };
+
+
+  const btn =
+    document.querySelector(
+      '#saveBillBtn'
+    );
+
+
+  if(btn){
+
+    btn.disabled=true;
+
+    btn.textContent=
+      'Saving...';
+
+  }
+
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method:'POST',
+
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+
+          body:JSON.stringify({
+
+            action:'saveBill',
+
+            bill:b
+
+          })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(
+      !response.ok ||
+      !result.success
+    ){
+
+      throw new Error(
+        result.error||
+        'Unable to save bill'
+      );
+
+    }
+
+
+    b.id =
+      result.billNo||
+      b.id;
+
+
+    b.billNo=b.id;
+
+
+    /*
+     * Keep local record available
+     * immediately after saving.
+     */
+    state.bills.unshift({
+      ...b,
+      date:formatDisplayDate(now),
+      time:formatDisplayTime(now)
+    });
+
+
+    toast(
+      'Bill saved successfully: '+
+      b.id
+    );
+
+
+    printBill(
+      b.id
+    );
+
+
+    resetBill();
+
+
+  }catch(error){
+
+    toast(
+      'Save failed: '+
+      error.message
+    );
+
+  }finally{
+
+    if(btn){
+
+      btn.disabled=false;
+
+      btn.textContent=
+        'Save & Print';
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   RESET BILL
+========================================================= */
+
+function resetBill(){
+
+  state.items=[
+    {
+      p:'',
+      q:1,
+      u:0
+    }
+  ];
+
+  state.customer={
+    name:'',
+    phone:'',
+    address:''
+  };
+
+  state.payment='';
+
+  state.discountType='amount';
+
+  state.discount=0;
+
+  render();
+
+}
+
+
+/* =========================================================
+   PRINT BILL
+========================================================= */
+
+function printBill(id){
+
+  const b =
+    state.bills.find(
+      x=>
+        x.id===id||
+        x.billNo===id
+    ) ||
+
+    (
+      state.history.results||[]
+    ).find(
+      x=>
+        x.id===id||
+        x.billNo===id
+    );
+
+
+  if(!b){
+
+    toast(
+      'Bill details not found'
+    );
+
+    return;
+
+  }
+
+
+  const sum =
+    Number(
+      b.subtotal!=null
+        ? b.subtotal
+        : total(b)
+    );
+
+
+  const disc =
+    b.discountType==='percent'
+      ? sum*
+        (Number(b.discount)||0)/
+        100
+      : Number(b.discount)||0;
+
+
+  const after =
+    Math.max(
+      0,
+      sum-disc
+    );
+
+
+  const tax =
+    after*
+    (Number(b.taxRate)||0)/
+    100;
+
+
+  const grand =
+    Number(
+      b.grandTotal!=null
+        ? b.grandTotal
+        : after+tax
+    );
+
+
+  const taxLabel =
+    b.taxLabel||
+    state.settings.taxLabel;
+
+
+  const rows =
+    (b.items||[])
+      .map(
+        (x,i)=>`
+
+          <tr>
+
+            <td>
+              ${i+1}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                x.p||
+                x.particular||
+                ''
+              )}
+            </td>
+
+            <td>
+              ${x.q}
+            </td>
+
+            <td>
+              ${money(x.u)}
+            </td>
+
+            <td>
+              ${money(
+                (Number(x.q)||0)*
+                (Number(x.u)||0)
+              )}
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join('');
+
+
+  const w =
+    window.open(
+      '',
+      '_blank',
+      'width=800,height=900'
+    );
+
+
+  if(!w){
+
+    toast(
+      'Please allow pop-ups to print the bill'
+    );
+
+    return;
+
+  }
+
+
+  w.document.write(`
+
+    <html>
+
+    <head>
+
+      <title>
+        ${escapeHtml(b.id)}
+      </title>
+
+      <style>
+
+        body{
+          font-family:Arial,sans-serif;
+          padding:24px;
+          color:#111;
+        }
+
+        h1{
+          text-align:center;
+          margin:0 0 4px;
+        }
+
+        .sub{
+          text-align:center;
+          color:#555;
+        }
+
+        .meta{
+          display:flex;
+          justify-content:space-between;
+          margin:20px 0;
+        }
+
+        .customer{
+          border-top:1px solid #ccc;
+          border-bottom:1px solid #ccc;
+          padding:12px 0;
+        }
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+          margin-top:15px;
+        }
+
+        th,td{
+          border:1px solid #ccc;
+          padding:8px;
+          text-align:left;
+        }
+
+        th{
+          background:#f2f2f2;
+        }
+
+        .total{
+          margin-left:auto;
+          width:320px;
+          margin-top:18px;
+        }
+
+        .grand{
+          font-size:20px;
+          font-weight:bold;
+          border-top:2px solid #111;
+          padding-top:10px;
+        }
+
+        .words{
+          margin-top:10px;
+          color:#555;
+        }
+
+        @media print{
+
+          @page{
+            size:auto;
+            margin:8mm;
+          }
+
+          body{
+            padding:0;
+          }
+
+        }
+
+      </style>
+
+    </head>
+
+
+    <body>
+
+      <h1>
+        ${escapeHtml(
+          state.settings.name
+        )}
+      </h1>
+
+
+      <div class="sub">
+
+        ${escapeHtml(
+          state.settings.gstLabel
+        )}:
+
+        ${escapeHtml(
+          state.settings.gst
+        )}
+
+      </div>
+
+
+      <div class="sub">
+
+        ${escapeHtml(
+          state.settings.mobile||
+          ''
+        )}
+
+        ${
+          state.settings.address
+            ? ' · '+
+              escapeHtml(
+                state.settings.address
+              )
+            : ''
+        }
+
+      </div>
+
+
+      <div class="meta">
+
+        <span>
+
+          <b>Bill No.</b>
+          ${escapeHtml(b.id)}
+
+        </span>
+
+
+        <span>
+
+          <b>Date</b>
+          ${escapeHtml(
+            b.date||''
+          )}
+
+          ${
+            b.time
+              ? ' '+escapeHtml(b.time)
+              : ''
+          }
+
+        </span>
+
+      </div>
+
+
+      <div class="customer">
+
+        <b>
+          Customer:
+        </b>
+
+        ${escapeHtml(
+          b.customer||
+          b.customerName||
+          'Walk-in'
+        )}
+
+        ${
+          b.phone
+            ? ' · '+
+              escapeHtml(b.phone)
+            : ''
+        }
+
+        <br>
+
+        ${escapeHtml(
+          b.address||
+          b.customerAddress||
+          ''
+        )}
+
+      </div>
+
+
+      <table>
+
+        <tr>
+
+          <th>
+            S.No.
+          </th>
+
+          <th>
+            Particular
+          </th>
+
+          <th>
+            Qty
+          </th>
+
+          <th>
+            Unit Price
+          </th>
+
+          <th>
+            Total
+          </th>
+
+        </tr>
+
+        ${rows}
+
+      </table>
+
+
+      <div class="total">
+
+        <div>
+          Subtotal:
+          <b>${money(sum)}</b>
+        </div>
+
+
+        <div>
+          Discount:
+          <b>
+            -${money(disc)}
+          </b>
+        </div>
+
+
+        ${
+          b.taxRate
+            ? `
+
+              <div>
+
+                ${escapeHtml(taxLabel)}
+                (${b.taxRate}%):
+
+                <b>
+                  ${money(tax)}
+                </b>
+
+              </div>
+
+            `
+            : ''
+        }
+
+
+        <div>
+
+          Payment:
+          <b>
+            ${escapeHtml(
+              b.payment||
+              b.paymentMode||
+              ''
+            )}
+          </b>
+
+        </div>
+
+
+        <div class="grand">
+
+          Grand Total:
+          ${money(grand)}
+
+        </div>
+
+
+        <div class="words">
+
+          ${words(grand)}
+
+        </div>
+
+      </div>
+
+
+      <p
+        style="
+          margin-top:35px;
+          font-size:12px;
+        "
+      >
+
+        Created by:
+        ${escapeHtml(
+          b.user||
+          b.createdBy||
+          ''
+        )}
+
+      </p>
+
+
+      <script>
+
+        window.print();
+
+      <\/script>
+
+    </body>
+
+    </html>
+
+  `);
+
+
+  w.document.close();
+
+}
+
+
+/* =========================================================
+   DATE HELPERS
+========================================================= */
+
+function isTodayBill(b){
+
+  if(!b)
+    return false;
+
+
+  if(b.dateISO){
+
+    const d =
+      new Date(b.dateISO);
+
+    if(!isNaN(d.getTime())){
+
+      return (
+        d.toISOString()
+          .slice(0,10)
+        ===
+        localToday()
+      );
+
+    }
+
+  }
+
+
+  if(
+    typeof b.date==='string'
+  ){
+
+    const text =
+      b.date.trim();
+
+
+    if(
+      text===
+      formatDisplayDate(
+        new Date()
+      )
+    )
+      return true;
+
+
+    const m =
+      text.match(
+        /^(\d{2})-(\d{2})-(\d{4})$/
+      );
+
+
+    if(m){
+
+      return (
+        `${m[3]}-${m[2]}-${m[1]}`
+        ===
+        localToday()
+      );
+
+    }
+
+  }
+
+
+  return false;
+
+}
+
+
+/* =========================================================
+   THEME / NAVIGATION
+========================================================= */
+
+function toggleTheme(){
+
+  state.theme =
+    state.theme==='dark'
+      ? 'light'
+      : 'dark';
+
+  persistSettings();
+
+  render();
+
+}
+
+
+function go(v){
+
+  if(
+    v==='settings' &&
+    state.role!=='ADMIN'
+  ){
+
+    toast(
+      'Admin access required'
+    );
+
+    return;
+
+  }
+
+  state.view=v;
+
+  render();
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(t){
+
+  let el =
+    document.querySelector(
+      '#toast'
+    );
+
+
+  if(!el){
+
+    const d =
+      document.createElement(
+        'div'
+      );
+
+    d.id='toast';
+
+    document.body.appendChild(d);
+
+    el=d;
+
+  }
+
+
+  el.innerHTML=
+    '<div class="toast">'+
+    escapeHtml(t)+
+    '</div>';
+
+
+  setTimeout(
+    ()=>{
+      if(el)
+        el.innerHTML='';
+    },
+    3000
+  );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+loadSettings();
+
+restoreSession();
+
+state.history.date=
+  localToday();
+
+render();
+
+</script>
+
+</body>
+</html>
