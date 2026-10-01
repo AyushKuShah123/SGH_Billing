@@ -186,8 +186,9 @@ function saveBill(bill) {
   }
 
 
-  const items =
-    bill.items || [];
+  const items = Array.isArray(bill.items)
+  ? bill.items
+  : [];
 
 
   /**
