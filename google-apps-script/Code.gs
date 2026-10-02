@@ -29,10 +29,12 @@ const SHEET_HEADER = [
    ========================================================= */
 
 function doGet() {
+
   return jsonResponse({
     success: true,
     message: 'Shivam Gift House Billing API is running'
   });
+
 }
 
 
@@ -44,20 +46,40 @@ function doPost(e) {
 
   try {
 
-    if (!e || !e.postData || !e.postData.contents) {
+    if (
+      !e ||
+      !e.postData ||
+      !e.postData.contents
+    ) {
+
       return jsonResponse({
         success: false,
         error: 'No POST data received'
       });
+
     }
 
-    const data = JSON.parse(e.postData.contents);
 
-    if (data.action === 'saveBill') {
-      return saveBill(data.bill);
+    const data =
+      JSON.parse(
+        e.postData.contents
+      );
+
+
+    if (
+      data.action === 'saveBill'
+    ) {
+
+      return saveBill(
+        data.bill
+      );
+
     }
 
-    if (data.action === 'searchBills') {
+
+    if (
+      data.action === 'searchBills'
+    ) {
 
       const search =
         data.search &&
@@ -65,27 +87,51 @@ function doPost(e) {
           ? data.search
           : data;
 
-      return searchBills(search);
+      return searchBills(
+        search
+      );
+
     }
 
-    if (data.action === 'todayBills') {
+
+    if (
+      data.action === 'todayBills'
+    ) {
+
       return getTodayBills();
+
     }
+
 
     return jsonResponse({
+
       success: false,
-      error: 'Unknown action: ' + (data.action || 'undefined')
+
+      error:
+        'Unknown action: ' +
+        (
+          data.action ||
+          'undefined'
+        )
+
     });
 
   } catch (error) {
 
     return jsonResponse({
+
       success: false,
-      error: error && error.message
-        ? error.message
-        : String(error)
+
+      error:
+        error &&
+        error.message
+          ? error.message
+          : String(error)
+
     });
+
   }
+
 }
 
 
@@ -96,18 +142,37 @@ function doPost(e) {
 function saveBill(bill) {
 
   if (!bill) {
+
     return jsonResponse({
+
       success: false,
-      error: 'Bill data is missing'
+
+      error:
+        'Bill data is missing'
+
     });
+
   }
 
-  if (!Array.isArray(bill.items) || bill.items.length === 0) {
+
+  if (
+    !Array.isArray(
+      bill.items
+    ) ||
+    bill.items.length === 0
+  ) {
+
     return jsonResponse({
+
       success: false,
-      error: 'Bill contains no items'
+
+      error:
+        'Bill contains no items'
+
     });
+
   }
+
 
   const paymentMode =
     String(
@@ -116,21 +181,60 @@ function saveBill(bill) {
       ''
     ).trim();
 
+
   if (!paymentMode) {
+
     return jsonResponse({
+
       success: false,
-      error: 'Payment mode is required'
+
+      error:
+        'Payment mode is required'
+
     });
+
   }
 
 
   /*
-   * IMPORTANT:
-   * Lock prevents two requests from modifying data
-   * at the same time.
+   * BILL NUMBER IS THE UNIQUE IDENTIFIER.
+   *
+   * The same bill number can never be inserted twice.
    */
 
-  const lock = LockService.getScriptLock();
+  const billNo =
+    String(
+      bill.billNo ||
+      bill.id ||
+      ''
+    ).trim();
+
+
+  if (!billNo) {
+
+    return jsonResponse({
+
+      success: false,
+
+      error:
+        'Bill number is missing'
+
+    });
+
+  }
+
+
+  /*
+   * Lock the script.
+   *
+   * This prevents two simultaneous requests from
+   * checking for the bill at the same time and both
+   * inserting it.
+   */
+
+  const lock =
+    LockService.getScriptLock();
+
 
   try {
 
@@ -139,43 +243,29 @@ function saveBill(bill) {
   } catch (error) {
 
     return jsonResponse({
+
       success: false,
-      error: 'Server is busy. Please try again.'
+
+      error:
+        'Server is busy. Please try again.'
+
     });
+
   }
 
 
   try {
 
-    const ss = SpreadsheetApp.openById(SHEET_ID);
-
-    /*
-     * Use the bill number supplied by the browser.
-     * This becomes the unique identifier.
-     */
-
-    const billNo =
-      String(
-        bill.billNo ||
-        bill.id ||
-        ''
-      ).trim();
-
-    if (!billNo) {
-
-      return jsonResponse({
-        success: false,
-        error: 'Bill number is missing'
-      });
-
-    }
+    const ss =
+      SpreadsheetApp.openById(
+        SHEET_ID
+      );
 
 
     /*
-     * DUPLICATE PROTECTION
+     * DUPLICATE CHECK
      *
-     * Before inserting anything, search all billing
-     * sheets for this bill number.
+     * This is performed BEFORE writing anything.
      */
 
     const existing =
@@ -184,34 +274,52 @@ function saveBill(bill) {
         billNo
       );
 
+
     if (existing) {
 
       return jsonResponse({
+
         success: true,
+
         duplicate: true,
-        message: 'Bill already exists',
-        billNo: billNo
+
+        alreadySaved: true,
+
+        message:
+          'Bill already exists',
+
+        billNo:
+          billNo
+
       });
 
     }
 
 
     /*
-     * Date
+     * BILL DATE
      */
 
     const date =
-      new Date(
-        bill.date ||
-        bill.iso ||
-        new Date()
+      getBillDate(
+        bill
       );
 
-    if (isNaN(date.getTime())) {
+
+    if (
+      !date ||
+      isNaN(
+        date.getTime()
+      )
+    ) {
 
       return jsonResponse({
+
         success: false,
-        error: 'Invalid bill date'
+
+        error:
+          'Invalid bill date'
+
       });
 
     }
@@ -222,7 +330,7 @@ function saveBill(bill) {
 
 
     /*
-     * Determine half-month sheet.
+     * Determine the correct billing sheet.
      */
 
     const day =
@@ -234,12 +342,14 @@ function saveBill(bill) {
         )
       );
 
+
     const monthName =
       Utilities.formatDate(
         date,
         timezone,
         'yyyy-MM'
       );
+
 
     const sheetName =
       day <= 15
@@ -254,7 +364,7 @@ function saveBill(bill) {
 
 
     /*
-     * Create sheet if it doesn't exist.
+     * Create the sheet if necessary.
      */
 
     if (!sheet) {
@@ -263,6 +373,7 @@ function saveBill(bill) {
         ss.insertSheet(
           sheetName
         );
+
 
       sheet
         .getRange(
@@ -275,6 +386,7 @@ function saveBill(bill) {
           SHEET_HEADER
         ]);
 
+
       sheet
         .getRange(
           1,
@@ -286,12 +398,16 @@ function saveBill(bill) {
           'bold'
         );
 
-      sheet.setFrozenRows(1);
+
+      sheet.setFrozenRows(
+        1
+      );
+
     }
 
 
     /*
-     * Bill information
+     * BILL INFORMATION
      */
 
     const customerName =
@@ -299,174 +415,188 @@ function saveBill(bill) {
         bill.customerName ||
         bill.customer ||
         ''
-      );
+      ).trim();
+
 
     const customerPhone =
       String(
         bill.customerPhone ||
         bill.phone ||
         ''
-      );
+      ).trim();
+
 
     const customerAddress =
       String(
         bill.customerAddress ||
         bill.address ||
         ''
-      );
+      ).trim();
+
 
     const createdBy =
       String(
         bill.createdBy ||
         bill.user ||
         ''
-      );
+      ).trim();
+
 
     const currency =
       String(
         bill.currency ||
         'NPR'
-      );
+      ).trim();
 
 
     const subtotal =
-      Number(
-        bill.subtotal || 0
+      toNumber(
+        bill.subtotal
       );
+
 
     const discountType =
       String(
         bill.discountType ||
         'amount'
-      );
+      ).trim();
+
 
     const discount =
-      Number(
-        bill.discount || 0
+      toNumber(
+        bill.discount
       );
+
 
     const taxLabel =
       String(
         bill.taxLabel ||
         ''
-      );
+      ).trim();
+
 
     const taxRate =
-      Number(
-        bill.taxRate || 0
+      toNumber(
+        bill.taxRate
       );
+
 
     const taxAmount =
-      Number(
-        bill.taxAmount || 0
+      toNumber(
+        bill.taxAmount
       );
 
+
     const grandTotal =
-      Number(
-        bill.grandTotal || 0
+      toNumber(
+        bill.grandTotal
       );
 
 
     /*
-     * Prepare ALL rows first.
-     *
-     * This is faster and safer than appendRow()
-     * for every item.
+     * Prepare all item rows first.
      */
 
     const rows = [];
 
-    bill.items.forEach(function(item) {
 
-      const quantity =
-        Number(
-          item.quantity ??
-          item.q ??
-          0
-        );
+    bill.items.forEach(
+      function(item) {
 
-      const unitPrice =
-        Number(
-          item.unitPrice ??
-          item.u ??
-          0
-        );
-
-      const itemTotal =
-        quantity *
-        unitPrice;
-
-      const particular =
-        String(
-          item.particular ??
-          item.p ??
-          ''
-        );
+        const quantity =
+          toNumber(
+            item.quantity ??
+            item.q
+          );
 
 
-      rows.push([
+        const unitPrice =
+          toNumber(
+            item.unitPrice ??
+            item.u
+          );
 
-        billNo,
 
-        Utilities.formatDate(
-          date,
-          timezone,
-          'dd-MM-yyyy'
-        ),
+        const itemTotal =
+          quantity *
+          unitPrice;
 
-        Utilities.formatDate(
-          date,
-          timezone,
-          'HH:mm:ss'
-        ),
 
-        customerName,
+        const particular =
+          String(
+            item.particular ??
+            item.p ??
+            ''
+          ).trim();
 
-        customerPhone,
 
-        customerAddress,
+        rows.push([
 
-        particular,
+          billNo,
 
-        quantity,
+          Utilities.formatDate(
+            date,
+            timezone,
+            'dd-MM-yyyy'
+          ),
 
-        unitPrice,
+          Utilities.formatDate(
+            date,
+            timezone,
+            'HH:mm:ss'
+          ),
 
-        itemTotal,
+          customerName,
 
-        subtotal,
+          customerPhone,
 
-        discountType,
+          customerAddress,
 
-        discount,
+          particular,
 
-        taxLabel,
+          quantity,
 
-        taxRate,
+          unitPrice,
 
-        taxAmount,
+          itemTotal,
 
-        grandTotal,
+          subtotal,
 
-        paymentMode,
+          discountType,
 
-        createdBy,
+          discount,
 
-        currency
+          taxLabel,
 
-      ]);
+          taxRate,
 
-    });
+          taxAmount,
+
+          grandTotal,
+
+          paymentMode,
+
+          createdBy,
+
+          currency
+
+        ]);
+
+      }
+    );
 
 
     /*
-     * Write all items in one operation.
+     * Write all rows at once.
      */
 
-    if (rows.length > 0) {
+    if (
+      rows.length > 0
+    ) {
 
       const firstRow =
         sheet.getLastRow() + 1;
+
 
       sheet
         .getRange(
@@ -475,21 +605,28 @@ function saveBill(bill) {
           rows.length,
           SHEET_HEADER.length
         )
-        .setValues(rows);
+        .setValues(
+          rows
+        );
 
     }
 
 
     /*
-     * Don't auto-resize every time.
-     * It makes saving unnecessarily slow.
+     * Make sure changes are committed before
+     * returning the success response.
      */
+
+    SpreadsheetApp.flush();
+
 
     return jsonResponse({
 
       success: true,
 
       duplicate: false,
+
+      alreadySaved: false,
 
       message:
         'Bill saved successfully',
@@ -499,6 +636,7 @@ function saveBill(bill) {
 
     });
 
+
   } catch (error) {
 
     return jsonResponse({
@@ -506,36 +644,53 @@ function saveBill(bill) {
       success: false,
 
       error:
-        error && error.message
+        error &&
+        error.message
           ? error.message
           : String(error)
 
     });
 
+
   } finally {
 
     try {
+
       lock.releaseLock();
+
     } catch (e) {}
 
   }
+
 }
 
 
 /* =========================================================
-   FIND EXISTING BILL
+   FIND BILL BY BILL NUMBER
    ========================================================= */
 
-function findBillByNumber(ss, billNo) {
-
-  const sheets =
-    getBillingSheets(ss);
+function findBillByNumber(
+  ss,
+  billNo
+) {
 
   const target =
     String(
       billNo
-    ).trim()
+    )
+    .trim()
     .toLowerCase();
+
+
+  if (!target) {
+    return null;
+  }
+
+
+  const sheets =
+    getBillingSheets(
+      ss
+    );
 
 
   for (
@@ -547,11 +702,17 @@ function findBillByNumber(ss, billNo) {
     const sheet =
       sheets[i];
 
+
     const lastRow =
       sheet.getLastRow();
 
-    if (lastRow <= 1) {
+
+    if (
+      lastRow <= 1
+    ) {
+
       continue;
+
     }
 
 
@@ -576,19 +737,28 @@ function findBillByNumber(ss, billNo) {
       r++
     ) {
 
-      const value =
+      const existingBillNo =
         String(
-          values[r][0] || ''
+          values[r][0] ||
+          ''
         )
         .trim()
         .toLowerCase();
 
 
-      if (value === target) {
+      if (
+        existingBillNo ===
+        target
+      ) {
 
         return {
-          sheet: sheet,
-          row: r + 2
+
+          sheet:
+            sheet,
+
+          row:
+            r + 2
+
         };
 
       }
@@ -597,7 +767,9 @@ function findBillByNumber(ss, billNo) {
 
   }
 
+
   return null;
+
 }
 
 
@@ -622,6 +794,7 @@ function searchBills(search) {
       search.mode ||
       'date'
     )
+    .trim()
     .toLowerCase();
 
 
@@ -651,55 +824,72 @@ function searchBills(search) {
     .trim();
 
 
-  let startDate;
-  let endDate;
+  let startDate =
+    null;
+
+  let endDate =
+    null;
 
 
   /*
    * TODAY
    */
 
-  if (mode === 'today') {
+  if (
+    mode === 'today'
+  ) {
 
-    const today =
+    const now =
       new Date();
+
 
     startDate =
       new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
       );
+
 
     endDate =
       new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
       );
 
   }
 
 
   /*
-   * PARTICULAR DATE
+   * SINGLE DATE
    */
 
-  else if (mode === 'date') {
+  else if (
+    mode === 'date'
+  ) {
 
-    if (!search.date) {
+    if (
+      !search.date
+    ) {
 
       return jsonResponse({
+
         success: false,
-        error: 'Date is required'
+
+        error:
+          'Date is required'
+
       });
 
     }
+
 
     startDate =
       parseInputDate(
         search.date
       );
+
 
     endDate =
       parseInputDate(
@@ -724,17 +914,22 @@ function searchBills(search) {
     ) {
 
       return jsonResponse({
+
         success: false,
+
         error:
           'Both from and to dates are required'
+
       });
 
     }
+
 
     startDate =
       parseInputDate(
         search.fromDate
       );
+
 
     endDate =
       parseInputDate(
@@ -744,11 +939,19 @@ function searchBills(search) {
   }
 
 
+  /*
+   * INVALID MODE
+   */
+
   else {
 
     return jsonResponse({
+
       success: false,
-      error: 'Invalid search mode'
+
+      error:
+        'Invalid search mode'
+
     });
 
   }
@@ -761,386 +964,456 @@ function searchBills(search) {
   if (
     !startDate ||
     !endDate ||
-    isNaN(startDate.getTime()) ||
-    isNaN(endDate.getTime())
+    isNaN(
+      startDate.getTime()
+    ) ||
+    isNaN(
+      endDate.getTime()
+    )
   ) {
 
     return jsonResponse({
+
       success: false,
-      error: 'Invalid search date'
+
+      error:
+        'Invalid search date'
+
     });
 
   }
 
 
-  startDate.setHours(
-    0,
-    0,
-    0,
-    0
-  );
+  /*
+   * Compare dates using date-only values.
+   */
 
-  endDate.setHours(
-    23,
-    59,
-    59,
-    999
-  );
+  startDate =
+    dateOnly(
+      startDate
+    );
+
+
+  endDate =
+    dateOnly(
+      endDate
+    );
 
 
   /*
-   * Billing sheets only.
+   * Get only the billing sheets.
    */
 
   const sheets =
-    getBillingSheets(ss);
+    getBillingSheets(
+      ss
+    );
 
 
   const grouped = {};
 
 
-  sheets.forEach(function(sheet) {
+  sheets.forEach(
+    function(sheet) {
 
-    const values =
-      sheet
-        .getDataRange()
-        .getValues();
-
-
-    if (
-      !values ||
-      values.length <= 1
-    ) {
-      return;
-    }
-
-
-    for (
-      let r = 1;
-      r < values.length;
-      r++
-    ) {
-
-      const row =
-        values[r];
-
-
-      /*
-       * Columns:
-       *
-       * 0 Bill No
-       * 1 Date
-       * 2 Time
-       * 3 Customer
-       * 4 Phone
-       * 5 Address
-       * 6 Particular
-       * 7 Quantity
-       * 8 Unit Price
-       * 9 Item Total
-       * 10 Subtotal
-       * 11 Discount Type
-       * 12 Discount
-       * 13 Tax Label
-       * 14 Tax Rate
-       * 15 Tax Amount
-       * 16 Grand Total
-       * 17 Payment
-       * 18 User
-       * 19 Currency
-       */
-
-
-      const billNo =
-        String(
-          row[0] || ''
-        ).trim();
-
-
-      if (!billNo) {
-        continue;
-      }
-
-
-      const rowDate =
-        parseSheetDate(
-          row[1]
-        );
-
-
-      if (!rowDate) {
-        continue;
-      }
-
-
-      /*
-       * Compare using date only.
-       */
-
-      const comparableDate =
-        new Date(
-          rowDate.getFullYear(),
-          rowDate.getMonth(),
-          rowDate.getDate()
-        );
+      const values =
+        sheet
+          .getDataRange()
+          .getValues();
 
 
       if (
-        comparableDate < startDate ||
-        comparableDate > endDate
+        !values ||
+        values.length <= 1
       ) {
 
-        continue;
+        return;
 
       }
 
 
-      const customer =
-        String(
-          row[3] || ''
-        ).trim();
-
-
-      const rowPayment =
-        String(
-          row[17] || ''
-        ).trim();
-
-
-      /*
-       * Customer search.
-       */
-
-      if (
-        query &&
-        !customer
-          .toLowerCase()
-          .includes(query)
+      for (
+        let r = 1;
+        r < values.length;
+        r++
       ) {
 
-        continue;
-
-      }
-
-
-      /*
-       * Bill number search.
-       */
-
-      if (
-        billNoQuery &&
-        !billNo
-          .toLowerCase()
-          .includes(
-            billNoQuery
-          )
-      ) {
-
-        continue;
-
-      }
+        const row =
+          values[r];
 
 
-      /*
-       * Payment filter.
-       */
+        /*
+         * Column 0 = Bill No.
+         */
 
-      if (
-        payment !== 'All' &&
-        rowPayment.toLowerCase() !==
-        payment.toLowerCase()
-      ) {
-
-        continue;
-
-      }
+        const billNo =
+          String(
+            row[0] ||
+            ''
+          ).trim();
 
 
-      /*
-       * Create bill group.
-       */
+        if (!billNo) {
 
-      if (!grouped[billNo]) {
+          continue;
 
-        grouped[billNo] = {
-
-          id:
-            billNo,
-
-          billNo:
-            billNo,
-
-          date:
-            Utilities.formatDate(
-              rowDate,
-              Session.getScriptTimeZone(),
-              'dd-MM-yyyy'
-            ),
-
-          time:
-            String(
-              row[2] || ''
-            ),
-
-          customer:
-            customer,
-
-          customerName:
-            customer,
-
-          phone:
-            String(
-              row[4] || ''
-            ),
-
-          address:
-            String(
-              row[5] || ''
-            ),
-
-          payment:
-            rowPayment,
-
-          paymentMode:
-            rowPayment,
-
-          user:
-            String(
-              row[18] || ''
-            ),
-
-          createdBy:
-            String(
-              row[18] || ''
-            ),
-
-          currency:
-            String(
-              row[19] ||
-              'NPR'
-            ),
-
-          subtotal:
-            Number(
-              row[10] || 0
-            ),
-
-          discountType:
-            String(
-              row[11] ||
-              'amount'
-            ),
-
-          discount:
-            Number(
-              row[12] || 0
-            ),
-
-          taxLabel:
-            String(
-              row[13] || ''
-            ),
-
-          taxRate:
-            Number(
-              row[14] || 0
-            ),
-
-          taxAmount:
-            Number(
-              row[15] || 0
-            ),
-
-          grandTotal:
-            Number(
-              row[16] || 0
-            ),
-
-          items: []
-
-        };
-
-      }
+        }
 
 
-      /*
-       * Add item.
-       */
+        /*
+         * Column 1 = Date
+         */
 
-      grouped[billNo]
-        .items
-        .push({
+        const rowDate =
+          parseSheetDate(
+            row[1]
+          );
 
-          p:
-            String(
-              row[6] || ''
-            ),
 
-          q:
-            Number(
-              row[7] || 0
-            ),
+        if (!rowDate) {
 
-          u:
-            Number(
-              row[8] || 0
+          continue;
+
+        }
+
+
+        const comparableDate =
+          dateOnly(
+            rowDate
+          );
+
+
+        /*
+         * Date filter.
+         */
+
+        if (
+          comparableDate < startDate ||
+          comparableDate > endDate
+        ) {
+
+          continue;
+
+        }
+
+
+        /*
+         * Column 3 = Customer Name
+         */
+
+        const customer =
+          String(
+            row[3] ||
+            ''
+          ).trim();
+
+
+        /*
+         * Column 17 = Payment Mode
+         */
+
+        const rowPayment =
+          String(
+            row[17] ||
+            ''
+          ).trim();
+
+
+        /*
+         * Customer search.
+         */
+
+        if (
+          query &&
+          !customer
+            .toLowerCase()
+            .includes(
+              query
             )
+        ) {
 
-        });
+          continue;
+
+        }
+
+
+        /*
+         * Bill number search.
+         */
+
+        if (
+          billNoQuery &&
+          !billNo
+            .toLowerCase()
+            .includes(
+              billNoQuery
+            )
+        ) {
+
+          continue;
+
+        }
+
+
+        /*
+         * Payment filter.
+         */
+
+        if (
+          payment &&
+          payment.toLowerCase() !==
+          'all' &&
+          rowPayment.toLowerCase() !==
+          payment.toLowerCase()
+        ) {
+
+          continue;
+
+        }
+
+
+        /*
+         * GROUP BILL ITEMS
+         *
+         * Every item of the same bill number
+         * is combined into one bill object.
+         */
+
+        if (
+          !grouped[billNo]
+        ) {
+
+          grouped[billNo] = {
+
+            id:
+              billNo,
+
+            billNo:
+              billNo,
+
+            date:
+              formatDisplayDate(
+                rowDate
+              ),
+
+            time:
+              formatDisplayTime(
+                row[2]
+              ),
+
+            customer:
+              customer,
+
+            customerName:
+              customer,
+
+            phone:
+              String(
+                row[4] ||
+                ''
+              ).trim(),
+
+            customerPhone:
+              String(
+                row[4] ||
+                ''
+              ).trim(),
+
+            address:
+              String(
+                row[5] ||
+                ''
+              ).trim(),
+
+            customerAddress:
+              String(
+                row[5] ||
+                ''
+              ).trim(),
+
+            payment:
+              rowPayment,
+
+            paymentMode:
+              rowPayment,
+
+            user:
+              String(
+                row[18] ||
+                ''
+              ).trim(),
+
+            createdBy:
+              String(
+                row[18] ||
+                ''
+              ).trim(),
+
+            currency:
+              String(
+                row[19] ||
+                'NPR'
+              ).trim(),
+
+            subtotal:
+              toNumber(
+                row[10]
+              ),
+
+            discountType:
+              String(
+                row[11] ||
+                'amount'
+              ).trim(),
+
+            discount:
+              toNumber(
+                row[12]
+              ),
+
+            taxLabel:
+              String(
+                row[13] ||
+                ''
+              ).trim(),
+
+            taxRate:
+              toNumber(
+                row[14]
+              ),
+
+            taxAmount:
+              toNumber(
+                row[15]
+              ),
+
+            grandTotal:
+              toNumber(
+                row[16]
+              ),
+
+            items: []
+
+          };
+
+        }
+
+
+        /*
+         * Add item.
+         */
+
+        grouped[billNo]
+          .items
+          .push({
+
+            p:
+              String(
+                row[6] ||
+                ''
+              ).trim(),
+
+            particular:
+              String(
+                row[6] ||
+                ''
+              ).trim(),
+
+            q:
+              toNumber(
+                row[7]
+              ),
+
+            quantity:
+              toNumber(
+                row[7]
+              ),
+
+            u:
+              toNumber(
+                row[8]
+              ),
+
+            unitPrice:
+              toNumber(
+                row[8]
+              ),
+
+            itemTotal:
+              toNumber(
+                row[9]
+              )
+
+          });
+
+      }
 
     }
+  );
 
-  });
 
+  /*
+   * Convert grouped object to array.
+   */
 
   const bills =
-    Object.keys(grouped)
-      .map(function(key) {
+    Object.keys(
+      grouped
+    ).map(
+      function(key) {
 
         return grouped[key];
 
-      });
+      }
+    );
 
 
   /*
    * Sort newest first.
    */
 
-  bills.sort(function(a, b) {
+  bills.sort(
+    function(a, b) {
 
-    const dateA =
-      parseSheetDate(
-        a.date
+      const dateA =
+        parseSheetDate(
+          a.date
+        );
+
+
+      const dateB =
+        parseSheetDate(
+          b.date
+        );
+
+
+      if (
+        dateB &&
+        dateA &&
+        dateB.getTime() !==
+        dateA.getTime()
+      ) {
+
+        return (
+          dateB.getTime() -
+          dateA.getTime()
+        );
+
+      }
+
+
+      return String(
+        b.time ||
+        ''
+      ).localeCompare(
+        String(
+          a.time ||
+          ''
+        )
       );
-
-    const dateB =
-      parseSheetDate(
-        b.date
-      );
-
-
-    const dateDifference =
-      dateB - dateA;
-
-
-    if (
-      dateDifference !== 0
-    ) {
-
-      return dateDifference;
 
     }
-
-
-    return String(
-      b.time || ''
-    ).localeCompare(
-      String(
-        a.time || ''
-      )
-    );
-
-  });
+  );
 
 
   return jsonResponse({
@@ -1154,11 +1427,12 @@ function searchBills(search) {
       bills.length,
 
     message:
-      bills.length
+      bills.length > 0
         ? 'Data found'
         : 'No data found'
 
   });
+
 }
 
 
@@ -1170,7 +1444,8 @@ function getTodayBills() {
 
   return searchBills({
 
-    mode: 'today'
+    mode:
+      'today'
 
   });
 
@@ -1185,14 +1460,16 @@ function getBillingSheets(ss) {
 
   return ss
     .getSheets()
-    .filter(function(sheet) {
+    .filter(
+      function(sheet) {
 
-      return /^\d{4}-\d{2}-(01-15|16-END)$/
-        .test(
-          sheet.getName()
-        );
+        return /^\d{4}-\d{2}-(01-15|16-END)$/
+          .test(
+            sheet.getName()
+          );
 
-    });
+      }
+    );
 
 }
 
@@ -1204,7 +1481,9 @@ function getBillingSheets(ss) {
 function parseInputDate(value) {
 
   if (!value) {
+
     return null;
+
   }
 
 
@@ -1227,18 +1506,28 @@ function parseInputDate(value) {
 
 
   if (!match) {
+
     return null;
+
   }
 
 
   const year =
-    Number(match[1]);
+    Number(
+      match[1]
+    );
+
 
   const month =
-    Number(match[2]);
+    Number(
+      match[2]
+    );
+
 
   const day =
-    Number(match[3]);
+    Number(
+      match[3]
+    );
 
 
   const date =
@@ -1250,14 +1539,16 @@ function parseInputDate(value) {
 
 
   /*
-   * Prevent invalid dates such as
-   * 2026-02-31.
+   * Reject impossible dates.
    */
 
   if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
+    date.getFullYear() !==
+      year ||
+    date.getMonth() !==
+      month - 1 ||
+    date.getDate() !==
+      day
   ) {
 
     return null;
@@ -1266,6 +1557,7 @@ function parseInputDate(value) {
 
 
   return date;
+
 }
 
 
@@ -1276,7 +1568,7 @@ function parseInputDate(value) {
 function parseSheetDate(value) {
 
   /*
-   * Native Date
+   * Native Date object.
    */
 
   if (
@@ -1295,6 +1587,7 @@ function parseSheetDate(value) {
 
     }
 
+
     return new Date(
       value.getTime()
     );
@@ -1304,13 +1597,12 @@ function parseSheetDate(value) {
 
   const text =
     String(
-      value || ''
+      value ||
+      ''
     ).trim();
 
 
   /*
-   * Expected:
-   *
    * DD-MM-YYYY
    */
 
@@ -1322,21 +1614,51 @@ function parseSheetDate(value) {
 
   if (match) {
 
-    return new Date(
+    const day =
+      Number(
+        match[1]
+      );
 
-      Number(match[3]),
+    const month =
+      Number(
+        match[2]
+      );
 
-      Number(match[2]) - 1,
+    const year =
+      Number(
+        match[3]
+      );
 
-      Number(match[1])
 
-    );
+    const date =
+      new Date(
+        year,
+        month - 1,
+        day
+      );
+
+
+    if (
+      date.getFullYear() !==
+        year ||
+      date.getMonth() !==
+        month - 1 ||
+      date.getDate() !==
+        day
+    ) {
+
+      return null;
+
+    }
+
+
+    return date;
 
   }
 
 
   /*
-   * Also support YYYY-MM-DD
+   * YYYY-MM-DD
    */
 
   match =
@@ -1347,20 +1669,317 @@ function parseSheetDate(value) {
 
   if (match) {
 
-    return new Date(
+    const year =
+      Number(
+        match[1]
+      );
 
-      Number(match[1]),
+    const month =
+      Number(
+        match[2]
+      );
 
-      Number(match[2]) - 1,
+    const day =
+      Number(
+        match[3]
+      );
 
-      Number(match[3])
+
+    const date =
+      new Date(
+        year,
+        month - 1,
+        day
+      );
+
+
+    if (
+      date.getFullYear() !==
+        year ||
+      date.getMonth() !==
+        month - 1 ||
+      date.getDate() !==
+        day
+    ) {
+
+      return null;
+
+    }
+
+
+    return date;
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   GET BILL DATE
+   ========================================================= */
+
+function getBillDate(bill) {
+
+  const candidates = [
+
+    bill.date,
+
+    bill.iso,
+
+    bill.createdAt,
+
+    bill.timestamp
+
+  ];
+
+
+  for (
+    let i = 0;
+    i < candidates.length;
+    i++
+  ) {
+
+    const value =
+      candidates[i];
+
+
+    if (
+      value === undefined ||
+      value === null ||
+      value === ''
+    ) {
+
+      continue;
+
+    }
+
+
+    /*
+     * If already a Date object.
+     */
+
+    if (
+      Object.prototype.toString.call(
+        value
+      ) === '[object Date]'
+    ) {
+
+      if (
+        !isNaN(
+          value.getTime()
+        )
+      ) {
+
+        return new Date(
+          value.getTime()
+        );
+
+      }
+
+      continue;
+
+    }
+
+
+    const text =
+      String(
+        value
+      ).trim();
+
+
+    /*
+     * YYYY-MM-DD
+     */
+
+    if (
+      /^\d{4}-\d{2}-\d{2}$/.test(
+        text
+      )
+    ) {
+
+      const parsed =
+        parseInputDate(
+          text
+        );
+
+
+      if (parsed) {
+
+        return parsed;
+
+      }
+
+    }
+
+
+    /*
+     * Try normal JavaScript date parsing.
+     */
+
+    const parsed =
+      new Date(
+        text
+      );
+
+
+    if (
+      !isNaN(
+        parsed.getTime()
+      )
+    ) {
+
+      return parsed;
+
+    }
+
+  }
+
+
+  /*
+   * If no valid date was supplied,
+   * use current server date.
+   */
+
+  return new Date();
+
+}
+
+
+/* =========================================================
+   DATE ONLY
+   ========================================================= */
+
+function dateOnly(date) {
+
+  return new Date(
+
+    date.getFullYear(),
+
+    date.getMonth(),
+
+    date.getDate(),
+
+    0,
+    0,
+    0,
+    0
+
+  );
+
+}
+
+
+/* =========================================================
+   DISPLAY DATE
+   ========================================================= */
+
+function formatDisplayDate(date) {
+
+  if (
+    !date ||
+    isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return '';
+
+  }
+
+
+  const timezone =
+    Session.getScriptTimeZone();
+
+
+  return Utilities.formatDate(
+
+    date,
+
+    timezone,
+
+    'dd-MM-yyyy'
+
+  );
+
+}
+
+
+/* =========================================================
+   DISPLAY TIME
+   ========================================================= */
+
+function formatDisplayTime(value) {
+
+  if (
+    Object.prototype.toString.call(
+      value
+    ) === '[object Date]'
+  ) {
+
+    if (
+      isNaN(
+        value.getTime()
+      )
+    ) {
+
+      return '';
+
+    }
+
+
+    return Utilities.formatDate(
+
+      value,
+
+      Session.getScriptTimeZone(),
+
+      'HH:mm:ss'
 
     );
 
   }
 
 
-  return null;
+  return String(
+    value ||
+    ''
+  ).trim();
+
+}
+
+
+/* =========================================================
+   NUMBER CONVERTER
+   ========================================================= */
+
+function toNumber(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ''
+  ) {
+
+    return 0;
+
+  }
+
+
+  const number =
+    Number(
+      value
+    );
+
+
+  return isNaN(
+    number
+  )
+    ? 0
+    : number;
+
 }
 
 
@@ -1371,11 +1990,13 @@ function parseSheetDate(value) {
 function jsonResponse(data) {
 
   return ContentService
+
     .createTextOutput(
       JSON.stringify(
         data
       )
     )
+
     .setMimeType(
       ContentService.MimeType.JSON
     );
