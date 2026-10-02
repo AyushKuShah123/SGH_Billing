@@ -36,6 +36,87 @@ function doPost(e) {
   }
 }
 
+
+function getBillingSheets(ss) {
+  return ss.getSheets().filter(function(sheet) {
+    return /^\d{4}-\d{2}-(01-15|16-END)$/.test(sheet.getName());
+  });
+}
+
+function findBillByNumber(ss, billNo) {
+  const target = String(billNo || '').trim().toLowerCase();
+  if (!target) return null;
+
+  const sheets = getBillingSheets(ss);
+
+  for (let i = 0; i < sheets.length; i++) {
+    const sheet = sheets[i];
+    const lastRow = sheet.getLastRow();
+    if (lastRow <= 1) continue;
+
+    const values = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+
+    for (let r = 0; r < values.length; r++) {
+      if (String(values[r][0] || '').trim().toLowerCase() === target) {
+        return { sheet: sheet, row: r + 2 };
+      }
+    }
+  }
+
+  return null;
+}
+
+/*
+ * Server-side sequential bill number.
+ * Format: SGH-YYDDM0001
+ *
+ * The browser no longer decides the next number.
+ * Script Properties + Script Lock keep the sequence stable
+ * even when the browser is refreshed or multiple saves occur.
+ */
+function generateNextBillNumber(ss, date) {
+  const timezone = Session.getScriptTimeZone();
+
+  const yy = Utilities.formatDate(date, timezone, 'yy');
+  const dd = Utilities.formatDate(date, timezone, 'dd');
+  const monthIndex = Number(Utilities.formatDate(date, timezone, 'M')) - 1;
+  const monthLetter = String.fromCharCode(65 + monthIndex);
+
+  const prefix = 'SGH-' + yy + dd + monthLetter;
+  const propertyKey = 'BILL_COUNTER_' + prefix;
+
+  const props = PropertiesService.getScriptProperties();
+  let current = Number(props.getProperty(propertyKey) || 0);
+
+  // First use: recover the highest existing number from the sheet.
+  if (current <= 0) {
+    const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp('^' + escapedPrefix + '(\\d+)$');
+
+    getBillingSheets(ss).forEach(function(sheet) {
+      const lastRow = sheet.getLastRow();
+      if (lastRow <= 1) return;
+
+      const values = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+
+      values.forEach(function(row) {
+        const value = String(row[0] || '').trim();
+        const match = value.match(regex);
+
+        if (match) {
+          current = Math.max(current, Number(match[1]) || 0);
+        }
+      });
+    });
+  }
+
+  const next = current + 1;
+  props.setProperty(propertyKey, String(next));
+
+  return prefix + String(next).padStart(4, '0');
+}
+
+
 function saveBill(bill) {
   if (!bill) {
     return jsonResponse({ success: false, error: 'Bill data is missing' });
@@ -49,73 +130,159 @@ function saveBill(bill) {
     return jsonResponse({ success: false, error: 'Payment mode is required' });
   }
 
-  const ss = SpreadsheetApp.openById(SHEET_ID);
-  const date = new Date(bill.date || new Date());
+  const lock = LockService.getScriptLock();
 
-  if (isNaN(date.getTime())) {
-    return jsonResponse({ success: false, error: 'Invalid bill date' });
+  try {
+    lock.waitLock(30000);
+  } catch (error) {
+    return jsonResponse({
+      success: false,
+      error: 'Server is busy. Please try again.'
+    });
   }
 
-  const day = date.getDate();
-  const monthName = Utilities.formatDate(date, Session.getScriptTimeZone(), 'yyyy-MM');
-  const sheetName = day <= 15 ? monthName + '-01-15' : monthName + '-16-END';
+  try {
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+    const date = new Date(bill.date || new Date());
 
-  let sheet = ss.getSheetByName(sheetName);
+    if (isNaN(date.getTime())) {
+      return jsonResponse({ success: false, error: 'Invalid bill date' });
+    }
 
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-    sheet.appendRow([
-      'Bill No.', 'Date', 'Time', 'Customer Name', 'Customer Phone',
-      'Customer Address', 'Particular', 'Quantity', 'Unit Price', 'Item Total',
-      'Subtotal', 'Discount Type', 'Discount', 'Tax Label', 'Tax Rate',
-      'Tax Amount', 'Grand Total', 'Payment Mode', 'Created By', 'Currency'
-    ]);
-    sheet.getRange(1, 1, 1, 20).setFontWeight('bold');
-    sheet.setFrozenRows(1);
+    const timezone = Session.getScriptTimeZone();
+
+    const day = Number(
+      Utilities.formatDate(date, timezone, 'dd')
+    );
+
+    const monthName = Utilities.formatDate(
+      date,
+      timezone,
+      'yyyy-MM'
+    );
+
+    const sheetName =
+      day <= 15
+        ? monthName + '-01-15'
+        : monthName + '-16-END';
+
+    let sheet = ss.getSheetByName(sheetName);
+
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+
+      sheet.getRange(1, 1, 1, 20).setValues([[
+        'Bill No.', 'Date', 'Time', 'Customer Name', 'Customer Phone',
+        'Customer Address', 'Particular', 'Quantity', 'Unit Price', 'Item Total',
+        'Subtotal', 'Discount Type', 'Discount', 'Tax Label', 'Tax Rate',
+        'Tax Amount', 'Grand Total', 'Payment Mode', 'Created By', 'Currency'
+      ]]);
+
+      sheet.getRange(1, 1, 1, 20).setFontWeight('bold');
+      sheet.setFrozenRows(1);
+    }
+
+    // SERVER is authoritative for the bill number.
+    const billNo = generateNextBillNumber(ss, date);
+
+    // Final collision protection.
+    if (findBillByNumber(ss, billNo)) {
+      return jsonResponse({
+        success: false,
+        error: 'Generated bill number already exists. Please try again.'
+      });
+    }
+
+    const customerName = String(
+      bill.customerName || bill.customer || ''
+    );
+
+    const customerPhone = String(
+      bill.customerPhone || bill.phone || ''
+    );
+
+    const customerAddress = String(
+      bill.customerAddress || bill.address || ''
+    );
+
+    const paymentMode = String(
+      bill.paymentMode || bill.payment || ''
+    );
+
+    const rows = bill.items.map(function(item) {
+      const quantity = Number(
+        item.quantity ?? item.q ?? 0
+      );
+
+      const unitPrice = Number(
+        item.unitPrice ?? item.u ?? 0
+      );
+
+      return [
+        billNo,
+        Utilities.formatDate(date, timezone, 'dd-MM-yyyy'),
+        Utilities.formatDate(date, timezone, 'HH:mm:ss'),
+        customerName,
+        customerPhone,
+        customerAddress,
+        item.particular ?? item.p ?? '',
+        quantity,
+        unitPrice,
+        quantity * unitPrice,
+        Number(bill.subtotal || 0),
+        bill.discountType || 'amount',
+        Number(bill.discount || 0),
+        bill.taxLabel || '',
+        Number(bill.taxRate || 0),
+        Number(bill.taxAmount || 0),
+        Number(bill.grandTotal || 0),
+        paymentMode,
+        bill.createdBy || bill.user || '',
+        bill.currency || 'NPR'
+      ];
+    });
+
+    /*
+     * Save the whole bill in one operation.
+     *
+     * The next row is intentionally left EMPTY.
+     * Therefore there is one blank row between bills.
+     */
+    const firstRow = Math.max(
+      2,
+      sheet.getLastRow() + 1
+    );
+
+    sheet.getRange(
+      firstRow,
+      1,
+      rows.length,
+      20
+    ).setValues(rows);
+
+    // Do not write anything to firstRow + rows.length.
+    // That is the blank separator row.
+
+    return jsonResponse({
+      success: true,
+      duplicate: false,
+      message: 'Bill saved successfully',
+      billNo: billNo
+    });
+
+  } catch (error) {
+    return jsonResponse({
+      success: false,
+      error: error && error.message
+        ? error.message
+        : String(error)
+    });
+
+  } finally {
+    try {
+      lock.releaseLock();
+    } catch (e) {}
   }
-
-  const billNo = bill.billNo || bill.id || '';
-  const customerName = bill.customerName || bill.customer || '';
-  const customerPhone = bill.customerPhone || bill.phone || '';
-  const customerAddress = bill.customerAddress || bill.address || '';
-  const paymentMode = bill.paymentMode || bill.payment || '';
-
-  bill.items.forEach(function(item) {
-    const quantity = Number(item.quantity ?? item.q ?? 0);
-    const unitPrice = Number(item.unitPrice ?? item.u ?? 0);
-    const itemTotal = quantity * unitPrice;
-
-    sheet.appendRow([
-      billNo,
-      Utilities.formatDate(date, Session.getScriptTimeZone(), 'dd-MM-yyyy'),
-      Utilities.formatDate(date, Session.getScriptTimeZone(), 'HH:mm:ss'),
-      customerName,
-      customerPhone,
-      customerAddress,
-      item.particular ?? item.p ?? '',
-      quantity,
-      unitPrice,
-      itemTotal,
-      Number(bill.subtotal || 0),
-      bill.discountType || 'amount',
-      Number(bill.discount || 0),
-      bill.taxLabel || '',
-      Number(bill.taxRate || 0),
-      Number(bill.taxAmount || 0),
-      Number(bill.grandTotal || 0),
-      paymentMode,
-      bill.createdBy || bill.user || '',
-      bill.currency || 'NPR'
-    ]);
-  });
-
-  sheet.autoResizeColumns(1, 20);
-
-  return jsonResponse({
-    success: true,
-    message: 'Bill saved successfully',
-    billNo: billNo
-  });
 }
 
 function searchBills(data) {
@@ -146,9 +313,7 @@ function searchBills(data) {
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(23, 59, 59, 999);
 
-  const sheets = ss.getSheets().filter(function(sheet) {
-    return /^\d{4}-\d{2}-(01-15|16-END)$/.test(sheet.getName());
-  });
+  const sheets = getBillingSheets(ss);
 
   const grouped = {};
 
